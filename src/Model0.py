@@ -21,13 +21,12 @@ from sklearn.decomposition import PCA
 from numpy.linalg import eigh
 
 # loading our dataset
-q_raw = pd.read_csv('Users\carol\Downloads\q_data_encoded.csv')
-# q_raw = pd.read_csv('data/q_data_encoded.csv')
+q_raw = pd.read_csv('data/q_data_encoded.csv')
 
 # peek at the data
-q_raw.head()
-q_raw.describe()
-q_raw.info()
+# q_raw.head()
+# q_raw.describe()
+# q_raw.info()
 
 # keep only relevant content
 columns_to_keep = ['q_date', 'q_year', 'prop_year', 'ia_status_raw', 'mw1', 'mw2', 'mw3']
@@ -79,9 +78,42 @@ columns_to_sum = ['mw1', 'mw2', 'mw3']
 
 # Create a new column 'total_MW' by summing across specified columns
 q_revised['total_mw'] = q_revised[columns_to_sum].sum(axis=1, skipna=True)
-print(q_revised)
+# print(q_revised)
 
-# q_revised['q_date'] = pd.to_datetime(q_revised['q_date'])
+q_cleaner = q_revised.copy().drop(columns=['mw1', 'mw2','mw3']).dropna()
+# print(q_cleaner)
 
-# make train/test split
-#q_train = 
+q_cleaner = q_cleaner[q_cleaner['q_date'].str.match(r'\d{1,2}/\d{1,2}/\d{4}$')]
+# # Convert the remaining dates to datetime
+q_cleaner['q_date'] = pd.to_datetime(q_cleaner['q_date'])
+
+q_cleaner = q_cleaner.drop(columns=['ia_status_raw', 'ia_status_category', 'q_date'])
+
+
+print(q_cleaner.info())
+
+# TRAINING
+# TODO: see if we can add date column below, it was not working
+features = q_cleaner[['q_year','prop_year','total_mw']]
+target = q_cleaner['ia_status_Withdrawn']
+
+# Conduct 80/20 train test split with random_state = 42
+seed = 42
+X_train, X_test, y_train, y_test = train_test_split(features, target,
+                                                     test_size = 0.2,
+                                                     random_state = seed)
+
+# TODO: Implement baseline model: multiclass logistic regression 
+#       - 85% accuracy, but only predicting based on year project was 
+#       entered, not a go
+
+# Initialize model with default parameters and fit it on the training set
+log_clf = LogisticRegression(max_iter = 1000) # higher max_iter for large data size
+log_clf.fit(X_train, y_train)
+
+# Use the model to predict on the test set
+y_pred = log_clf.predict(X_test)
+
+# Find the accuracy
+log_acc = accuracy_score(y_test, y_pred)
+print("Accuracy score: " + str(log_acc))
