@@ -21,7 +21,7 @@ from sklearn.decomposition import PCA
 from numpy.linalg import eigh
 
 # loading our dataset
-q_raw = pd.read_csv('data/q_data_encoded.csv')
+q_raw = pd.read_csv('q_data_encoded.csv')
 
 # peek at the data
 # q_raw.head()
@@ -37,7 +37,8 @@ q_revised = q_raw[columns_to_keep].copy()
 # unique_ia_vals = q_revised['ia_status_raw'].unique()
 # print(unique_ia_vals)
 
-value_counts = q_revised['ia_status_raw'].value_counts().head(20)
+value_counts = q_revised['ia_status_raw'].value_counts().head(40)
+
 # print(value_counts)
 
 # drop irrelevant columns and one hot encode
