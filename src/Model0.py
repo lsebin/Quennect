@@ -7,17 +7,11 @@ import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
-import json
-from plotly import graph_objects as go
 import plotly.express as px
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, f1_score
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.decomposition import PCA
 from numpy.linalg import eigh
 
 # loading our dataset
@@ -117,4 +111,7 @@ y_pred = log_clf.predict(X_test)
 
 # Find the accuracy
 log_acc = accuracy_score(y_test, y_pred)
+log_f1 = f1_score(y_test, y_pred)
 print("Accuracy score: " + str(log_acc))
+print("F1 score: " + str(log_f1))
+
