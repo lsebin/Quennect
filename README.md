@@ -20,7 +20,10 @@
    * Go to the directory where you want to make a clone for the repo:
        `git clone https://github.com/lsebin/Quennect.git`
 
-  
 4. Make a Python environment
    * I figured it is easier for us to open or work on any file when we have the same version of Python libraries. So, we will use a Python environment.
-  
+   `conda create -n qnct python=3.8`
+   `pip install -r requirements.txt`
+   
+   To use this virtual environment,
+   `conda activate qnct`
