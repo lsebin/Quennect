@@ -14,7 +14,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.decomposition import PCA
 from numpy.linalg import eigh
 
-q_cleaned = pd.read_csv('q_data_cleaned.csv')
+q_cleaned = pd.read_csv('/Users/shanewilliams/Quennect/src/q_data_cleaned.csv')
 print(q_cleaned.columns)
 
 features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)

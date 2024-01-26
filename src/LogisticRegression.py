@@ -15,7 +15,7 @@ from sklearn.metrics import confusion_matrix
 from numpy.linalg import eigh
 
 # loading our dataset
-q_cleaned = pd.read_csv('q_data_cleaned.csv')
+q_cleaned = pd.read_csv('/Users/shanewilliams/Quennect/src/q_data_cleaned.csv')
 print(q_cleaned.columns)
 
 features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
