@@ -23,6 +23,7 @@
 4. Make a Python environment
    * I figured it is easier for us to open or work on any file when we have the same version of Python libraries. So, we will use a Python environment.
    `conda create -n qnct python=3.8`
+   `conda activate qnct`
    `pip install -r requirements.txt`
    
    To use this virtual environment,
