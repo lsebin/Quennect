@@ -9,34 +9,41 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, SGDClassifier, Lasso
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.metrics import confusion_matrix
-from numpy.linalg import eigh
+from sklearn.pipeline import make_pipeline
 
 # loading our dataset
-q_cleaned = pd.read_csv('/Users/shanewilliams/Quennect/src/q_data_cleaned.csv')
-print(q_cleaned.columns)
+#q_cleaned = pd.read_csv('/Users/shanewilliams/Quennect/src/q_data_cleaned.csv')
+q_cleaned = pd.read_csv('data/data_vectorized_240228.csv')
+#print(q_cleaned.columns)
 
 features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
 target = q_cleaned['ia_status_Withdrawn']
 
-print(target.value_counts())
-
-
 # Conduct 80/20 train test split with random_state = 42
 seed = 42
-X_train, X_test, y_train, y_test = train_test_split(features, target,
+
+from imblearn.under_sampling import RandomUnderSampler
+rus = RandomUnderSampler(random_state=seed)
+X_rus, y_rus= rus.fit_resample(features, target)
+
+
+X_train, X_test, y_train, y_test = train_test_split(X_rus, y_rus,
                                                      test_size = 0.2,
-                                                     random_state = seed)
+                                                     random_state = seed,
+                                                    )
 
 # TODO: Implement baseline model: multiclass logistic regression 
 #       - 85% accuracy, but only predicting based on year project was 
 #       entered, not a go
 
 # Initialize model with default parameters and fit it on the training set
-log_clf = LogisticRegression(max_iter = 1000) # higher max_iter for large data size
+#log_clf = LogisticRegression(verbose = 1) # higher max_iter for large data size
+log_clf = make_pipeline(StandardScaler(), SGDClassifier(loss="log_loss", eta0=1, learning_rate="constant", max_iter=1000, random_state=seed, verbose=1))
 log_clf.fit(X_train, y_train)
+#log_clf.fit(X_train, y_train)
 
 # Use the model to predict on the test set
 y_pred = log_clf.predict(X_test)
