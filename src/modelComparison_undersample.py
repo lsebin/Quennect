@@ -1,20 +1,13 @@
-# Model 0: Testing out non-neural network models that should be less computationally expensive
-
 # imports
 import pandas as pd
 import argparse
 
 import numpy as np
-from datetime import datetime
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression, SGDClassifier, Lasso
+from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import RandomizedSearchCV
 from numpy.linalg import eigh
 from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier, AdaBoostClassifier
@@ -145,11 +138,18 @@ def train(args=get_args()):
         model = models[md]
         # Use the model to predict on the test set
         y_pred = model.predict(X_test)
+        y_trained = model.predict(X_train)
 
         # Find the accuracy
+        
+        acc_t = accuracy_score(y_train, y_trained)
+        f1_t = f1_score(y_train, y_trained)
+        
         acc = accuracy_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
         print(f"{md}------------------------")
+        print("Accuracy score trained: " + str(acc_t))
+        print("F1 score trained : " + str(f1_t))
         print("Accuracy score: " + str(acc))
         print("F1 score: " + str(f1))
 
