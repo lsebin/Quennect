@@ -1,0 +1,302 @@
+RidgeRegression----------------------
+-- Epoch 1
+Norm: 115.33, NNZs: 105, Bias: -3.692335, T: 920, Avg. loss: 9.045325
+Total training time: 0.02 seconds.
+-- Epoch 2
+Norm: 114.35, NNZs: 105, Bias: -3.955211, T: 1840, Avg. loss: 9.594230
+Total training time: 0.03 seconds.
+-- Epoch 3
+Norm: 114.86, NNZs: 105, Bias: -11.591208, T: 2760, Avg. loss: 9.147477
+Total training time: 0.03 seconds.
+-- Epoch 4
+Norm: 112.80, NNZs: 105, Bias: -4.655962, T: 3680, Avg. loss: 7.993391
+Total training time: 0.07 seconds.
+-- Epoch 5
+Norm: 109.13, NNZs: 105, Bias: -1.837618, T: 4600, Avg. loss: 9.574254
+Total training time: 0.10 seconds.
+-- Epoch 6
+Norm: 99.70, NNZs: 105, Bias: -4.141435, T: 5520, Avg. loss: 9.031637
+Total training time: 0.12 seconds.
+-- Epoch 7
+Norm: 99.84, NNZs: 105, Bias: 0.108367, T: 6440, Avg. loss: 8.861827
+Total training time: 0.12 seconds.
+-- Epoch 8
+Norm: 94.04, NNZs: 105, Bias: 0.973717, T: 7360, Avg. loss: 8.766110
+Total training time: 0.12 seconds.
+-- Epoch 9
+Norm: 94.04, NNZs: 105, Bias: 4.479182, T: 8280, Avg. loss: 9.105623
+Total training time: 0.13 seconds.
+Convergence after 9 epochs took 0.13 seconds
+LassoRegression----------------------
+-- Epoch 1
+Norm: 122.08, NNZs: 105, Bias: -4.000138, T: 920, Avg. loss: 9.496772
+Total training time: 0.00 seconds.
+-- Epoch 2
+Norm: 131.58, NNZs: 103, Bias: -6.561869, T: 1840, Avg. loss: 9.456787
+Total training time: 0.01 seconds.
+-- Epoch 3
+Norm: 137.08, NNZs: 102, Bias: -11.769653, T: 2760, Avg. loss: 8.918111
+Total training time: 0.01 seconds.
+-- Epoch 4
+Norm: 146.27, NNZs: 86, Bias: -3.758051, T: 3680, Avg. loss: 8.455597
+Total training time: 0.01 seconds.
+-- Epoch 5
+Norm: 153.23, NNZs: 85, Bias: -3.459144, T: 4600, Avg. loss: 8.888795
+Total training time: 0.01 seconds.
+-- Epoch 6
+Norm: 155.45, NNZs: 86, Bias: -6.847654, T: 5520, Avg. loss: 8.766257
+Total training time: 0.02 seconds.
+-- Epoch 7
+Norm: 160.83, NNZs: 85, Bias: -5.347512, T: 6440, Avg. loss: 7.919613
+Total training time: 0.02 seconds.
+-- Epoch 8
+Norm: 168.45, NNZs: 84, Bias: -5.771810, T: 7360, Avg. loss: 7.826607
+Total training time: 0.02 seconds.
+-- Epoch 9
+Norm: 174.83, NNZs: 84, Bias: -4.681226, T: 8280, Avg. loss: 8.356734
+Total training time: 0.02 seconds.
+-- Epoch 10
+Norm: 181.15, NNZs: 84, Bias: -4.181743, T: 9200, Avg. loss: 8.057455
+Total training time: 0.03 seconds.
+-- Epoch 11
+Norm: 186.19, NNZs: 83, Bias: -6.181438, T: 10120, Avg. loss: 8.496461
+Total training time: 0.03 seconds.
+-- Epoch 12
+Norm: 192.16, NNZs: 82, Bias: -5.401386, T: 11040, Avg. loss: 8.439932
+Total training time: 0.03 seconds.
+-- Epoch 13
+Norm: 200.10, NNZs: 82, Bias: -4.490342, T: 11960, Avg. loss: 7.266747
+Total training time: 0.04 seconds.
+-- Epoch 14
+Norm: 207.99, NNZs: 82, Bias: -4.960012, T: 12880, Avg. loss: 8.327457
+Total training time: 0.04 seconds.
+-- Epoch 15
+Norm: 216.24, NNZs: 84, Bias: -2.619836, T: 13800, Avg. loss: 6.683095
+Total training time: 0.04 seconds.
+-- Epoch 16
+Norm: 221.34, NNZs: 78, Bias: -9.276182, T: 14720, Avg. loss: 7.983981
+Total training time: 0.04 seconds.
+-- Epoch 17
+Norm: 227.87, NNZs: 85, Bias: -2.799545, T: 15640, Avg. loss: 7.668352
+Total training time: 0.05 seconds.
+-- Epoch 18
+Norm: 235.16, NNZs: 82, Bias: 0.900268, T: 16560, Avg. loss: 6.872007
+Total training time: 0.05 seconds.
+-- Epoch 19
+Norm: 241.75, NNZs: 83, Bias: -10.420789, T: 17480, Avg. loss: 7.758415
+Total training time: 0.05 seconds.
+-- Epoch 20
+Norm: 249.38, NNZs: 84, Bias: -0.265222, T: 18400, Avg. loss: 7.815922
+Total training time: 0.05 seconds.
+Convergence after 20 epochs took 0.05 seconds
+Perceptron----------------------
+-- Epoch 1
+Norm: 125.67, NNZs: 105, Bias: -7.000000, T: 920, Avg. loss: 9.353547
+Total training time: 0.00 seconds.
+-- Epoch 2
+Norm: 134.90, NNZs: 105, Bias: -6.000000, T: 1840, Avg. loss: 9.727262
+Total training time: 0.00 seconds.
+-- Epoch 3
+Norm: 138.91, NNZs: 105, Bias: -16.000000, T: 2760, Avg. loss: 9.581204
+Total training time: 0.01 seconds.
+-- Epoch 4
+Norm: 142.20, NNZs: 105, Bias: -10.000000, T: 3680, Avg. loss: 8.620211
+Total training time: 0.01 seconds.
+-- Epoch 5
+Norm: 149.76, NNZs: 105, Bias: -7.000000, T: 4600, Avg. loss: 8.781686
+Total training time: 0.01 seconds.
+-- Epoch 6
+Norm: 149.72, NNZs: 105, Bias: -12.000000, T: 5520, Avg. loss: 9.761282
+Total training time: 0.01 seconds.
+-- Epoch 7
+Norm: 150.38, NNZs: 105, Bias: -9.000000, T: 6440, Avg. loss: 8.648590
+Total training time: 0.02 seconds.
+-- Epoch 8
+Norm: 152.99, NNZs: 105, Bias: -8.000000, T: 7360, Avg. loss: 8.687447
+Total training time: 0.02 seconds.
+-- Epoch 9
+Norm: 156.36, NNZs: 105, Bias: -7.000000, T: 8280, Avg. loss: 8.903962
+Total training time: 0.02 seconds.
+Convergence after 9 epochs took 0.02 seconds
+LinearSVM----------------------
+[LibSVM].............*....*
+optimization finished, #iter = 16031
+obj = -333.483520, rho = 0.259659
+nSV = 399, nBSV = 321
+Total nSV = 399
+RBFSVM----------------------
+[LibSVM]*
+optimization finished, #iter = 572
+obj = -410.292433, rho = -0.517887
+nSV = 550, nBSV = 421
+Total nSV = 550
+RandomForest----------------------
+/home/sebin/anaconda3/envs/qnct/lib/python3.8/site-packages/sklearn/model_selection/_search.py:307: UserWarning: The total space of parameters 3 is smaller than n_iter=10. Running 3 iterations. For exhaustive searches, use GridSearchCV.
+  warnings.warn(
+Fitting 3 folds for each of 3 candidates, totalling 9 fits
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+GradientBoostedTree----------------------
+Binning 0.001 GB of training data: 0.019 s
+Fitting gradient boosted rounds:
+[1/100] 1 tree, 29 leaves, max depth = 10, in 0.007s
+[2/100] 1 tree, 31 leaves, max depth = 10, in 0.005s
+[3/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[4/100] 1 tree, 31 leaves, max depth = 10, in 0.006s
+[5/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[6/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[7/100] 1 tree, 31 leaves, max depth = 10, in 0.006s
+[8/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[9/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[10/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[11/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[12/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[13/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[14/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[15/100] 1 tree, 28 leaves, max depth = 10, in 0.004s
+[16/100] 1 tree, 28 leaves, max depth = 10, in 0.003s
+[17/100] 1 tree, 29 leaves, max depth = 10, in 0.004s
+[18/100] 1 tree, 30 leaves, max depth = 10, in 0.003s
+[19/100] 1 tree, 29 leaves, max depth = 10, in 0.005s
+[20/100] 1 tree, 29 leaves, max depth = 10, in 0.003s
+[21/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[22/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[23/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[24/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[25/100] 1 tree, 27 leaves, max depth = 10, in 0.003s
+[26/100] 1 tree, 26 leaves, max depth = 10, in 0.003s
+[27/100] 1 tree, 21 leaves, max depth = 10, in 0.002s
+[28/100] 1 tree, 30 leaves, max depth = 10, in 0.004s
+[29/100] 1 tree, 19 leaves, max depth = 10, in 0.003s
+[30/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[31/100] 1 tree, 26 leaves, max depth = 10, in 0.003s
+[32/100] 1 tree, 27 leaves, max depth = 10, in 0.002s
+[33/100] 1 tree, 18 leaves, max depth = 10, in 0.002s
+[34/100] 1 tree, 29 leaves, max depth = 10, in 0.003s
+[35/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[36/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[37/100] 1 tree, 21 leaves, max depth = 10, in 0.002s
+[38/100] 1 tree, 20 leaves, max depth = 10, in 0.004s
+[39/100] 1 tree, 21 leaves, max depth = 10, in 0.003s
+[40/100] 1 tree, 21 leaves, max depth = 10, in 0.002s
+[41/100] 1 tree, 13 leaves, max depth = 10, in 0.002s
+[42/100] 1 tree, 25 leaves, max depth = 10, in 0.003s
+[43/100] 1 tree, 24 leaves, max depth = 10, in 0.003s
+[44/100] 1 tree, 30 leaves, max depth = 10, in 0.004s
+[45/100] 1 tree, 23 leaves, max depth = 10, in 0.002s
+[46/100] 1 tree, 31 leaves, max depth = 9, in 0.003s
+[47/100] 1 tree, 20 leaves, max depth = 10, in 0.002s
+[48/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[49/100] 1 tree, 24 leaves, max depth = 10, in 0.003s
+[50/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[51/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[52/100] 1 tree, 21 leaves, max depth = 10, in 0.002s
+[53/100] 1 tree, 24 leaves, max depth = 10, in 0.003s
+[54/100] 1 tree, 21 leaves, max depth = 10, in 0.003s
+[55/100] 1 tree, 29 leaves, max depth = 10, in 0.003s
+[56/100] 1 tree, 27 leaves, max depth = 10, in 0.002s
+[57/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[58/100] 1 tree, 16 leaves, max depth = 10, in 0.003s
+[59/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[60/100] 1 tree, 24 leaves, max depth = 10, in 0.002s
+[61/100] 1 tree, 20 leaves, max depth = 10, in 0.002s
+[62/100] 1 tree, 31 leaves, max depth = 9, in 0.003s
+[63/100] 1 tree, 22 leaves, max depth = 10, in 0.003s
+[64/100] 1 tree, 26 leaves, max depth = 10, in 0.005s
+[65/100] 1 tree, 24 leaves, max depth = 10, in 0.004s
+[66/100] 1 tree, 28 leaves, max depth = 10, in 0.003s
+[67/100] 1 tree, 30 leaves, max depth = 10, in 0.003s
+[68/100] 1 tree, 25 leaves, max depth = 10, in 0.003s
+[69/100] 1 tree, 21 leaves, max depth = 10, in 0.003s
+[70/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[71/100] 1 tree, 25 leaves, max depth = 10, in 0.003s
+[72/100] 1 tree, 20 leaves, max depth = 10, in 0.002s
+[73/100] 1 tree, 31 leaves, max depth = 10, in 0.004s
+[74/100] 1 tree, 25 leaves, max depth = 10, in 0.003s
+[75/100] 1 tree, 23 leaves, max depth = 10, in 0.003s
+[76/100] 1 tree, 22 leaves, max depth = 10, in 0.002s
+[77/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[78/100] 1 tree, 22 leaves, max depth = 10, in 0.004s
+[79/100] 1 tree, 26 leaves, max depth = 10, in 0.004s
+[80/100] 1 tree, 26 leaves, max depth = 10, in 0.003s
+[81/100] 1 tree, 30 leaves, max depth = 10, in 0.003s
+[82/100] 1 tree, 28 leaves, max depth = 10, in 0.003s
+[83/100] 1 tree, 21 leaves, max depth = 10, in 0.004s
+[84/100] 1 tree, 26 leaves, max depth = 10, in 0.003s
+[85/100] 1 tree, 20 leaves, max depth = 10, in 0.002s
+[86/100] 1 tree, 29 leaves, max depth = 10, in 0.003s
+[87/100] 1 tree, 27 leaves, max depth = 10, in 0.002s
+[88/100] 1 tree, 24 leaves, max depth = 10, in 0.002s
+[89/100] 1 tree, 28 leaves, max depth = 10, in 0.004s
+[90/100] 1 tree, 22 leaves, max depth = 10, in 0.003s
+[91/100] 1 tree, 24 leaves, max depth = 10, in 0.003s
+[92/100] 1 tree, 30 leaves, max depth = 10, in 0.003s
+[93/100] 1 tree, 30 leaves, max depth = 10, in 0.003s
+[94/100] 1 tree, 22 leaves, max depth = 10, in 0.003s
+[95/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[96/100] 1 tree, 29 leaves, max depth = 10, in 0.003s
+[97/100] 1 tree, 15 leaves, max depth = 10, in 0.002s
+[98/100] 1 tree, 23 leaves, max depth = 10, in 0.002s
+[99/100] 1 tree, 31 leaves, max depth = 10, in 0.003s
+[100/100] 1 tree, 23 leaves, max depth = 10, in 0.003s
+Fit 100 trees in 0.429 s, (2657 total leaves)
+Time spent computing histograms: 0.113s
+Time spent finding best splits:  0.040s
+Time spent applying splits:      0.044s
+Time spent predicting:           0.003s
+AdaBoost----------------------
+NeuralNet----------------------
+RidgeRegression------------------------
+Accuracy score: 0.7086956521739131
+F1 score: 0.6912442396313364
+LassoRegression------------------------
+Accuracy score: 0.7217391304347827
+F1 score: 0.7333333333333333
+Perceptron------------------------
+Accuracy score: 0.7304347826086957
+F1 score: 0.7155963302752293
+LinearSVM------------------------
+Accuracy score: 0.7521739130434782
+F1 score: 0.7466666666666667
+RBFSVM------------------------
+Accuracy score: 0.7260869565217392
+F1 score: 0.6865671641791045
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+RandomForest------------------------
+Accuracy score: 0.8
+F1 score: 0.7676767676767676
+GradientBoostedTree------------------------
+Accuracy score: 0.8
+F1 score: 0.7889908256880734
+AdaBoost------------------------
+Accuracy score: 0.7913043478260869
+F1 score: 0.7894736842105263
+NeuralNet------------------------
+Accuracy score: 0.7913043478260869
+F1 score: 0.7894736842105263
+[CV] END .................................min_samples_leaf=2; total time=   0.2s
+[CV] END .................................min_samples_leaf=4; total time=   0.2s
+[CV] END .................................min_samples_leaf=4; total time=   0.2s
+[CV] END .................................min_samples_leaf=2; total time=   0.2s
+[CV] END .................................min_samples_leaf=2; total time=   0.3s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+[CV] END .................................min_samples_leaf=6; total time=   0.2s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+[CV] END .................................min_samples_leaf=6; total time=   0.2s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+[CV] END .................................min_samples_leaf=6; total time=   0.2s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+[CV] END .................................min_samples_leaf=4; total time=   0.3s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=1)]: Done  49 tasks      | elapsed:    0.0s

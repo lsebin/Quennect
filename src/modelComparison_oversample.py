@@ -34,9 +34,7 @@ def get_args():
 def prepare_data():
     q_cleaned = pd.read_csv('data/data_vectorized_240228.csv')
 
-    features = q_cleaned.drop(['ia_status_Facility Study', 'ia_status_Feasibility Study',
-       'ia_status_IA Executed', 'ia_status_Operational',
-       'ia_status_System Impact Study', 'ia_status_Withdrawn'], axis = 1)
+    features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
     target = q_cleaned['ia_status_Withdrawn']
 
 
@@ -58,50 +56,45 @@ def train(args=get_args()):
 
     # Ridge Regression(Logistic Regression with L2 regularization)
     if args.model == "RidgeRegression" or "All":
-        print("RidgeRegression----------------------")
         log_clf = make_pipeline(StandardScaler(), SGDClassifier(loss="log_loss", eta0=1, learning_rate="constant",random_state=seed, verbose=1))
         log_clf.fit(X_train, y_train)
         models["RidgeRegression"] = log_clf
 
     # Lasso Regression(Logistic Regression with L1 regularization)
     if args.model == "LassoRegression" or "All":
-        print("LassoRegression----------------------")
         log_clf = make_pipeline(StandardScaler(), SGDClassifier(loss="log_loss", eta0=1, learning_rate="constant", penalty='l1', random_state=seed, verbose=1))
         log_clf.fit(X_train, y_train)
         models["LassoRegression"] = log_clf
 
     # Perceptron
     if args.model == "Perceptron" or "All":
-        print("Perceptron----------------------")
         perceptron = make_pipeline(StandardScaler(), SGDClassifier(loss="perceptron", eta0=1, learning_rate="constant", penalty=None, random_state=seed, verbose=1))
         perceptron.fit(X_train, y_train)
         models["Perceptron"] = perceptron
 
     # Linear SVM 
     if args.model == "LinearSVM" or "All":
-        print("LinearSVM----------------------")
         svm = make_pipeline(StandardScaler(), SVC(kernel = 'linear', gamma='auto', verbose=1, random_state=seed))
         svm.fit(X_train, y_train)
         models["LinearSVM"] = svm
 
     # RBF SVM
     if args.model == "RBFSVM" or "All":
-        print("RBFSVM----------------------")
         svm = make_pipeline(StandardScaler(), SVC(kernel = 'rbf', gamma='auto', verbose=1, random_state=seed))
         svm.fit(X_train, y_train)
         models["RBFSVM"] = svm
 
     # Random Forest
     if args.model == "RandomForest" or "All":
-        print("RandomForest----------------------")
         rf_clf = RandomForestClassifier(criterion = 'entropy',
                                         max_depth = 10,
                                         random_state = seed, verbose=1)
 
+        max_features = 'sqrt'
 
         min_samples_leaf = [2, 4, 6]
 
-        random_grid = {
+        random_grid = {'max_features': max_features,
                     'min_samples_leaf': min_samples_leaf}
 
         rf_random = RandomizedSearchCV(estimator = rf_clf,
@@ -118,7 +111,6 @@ def train(args=get_args()):
 
     # Gradient Boosted Tree
     if args.model == "GradientBoostedTree" or "All":
-        print("GradientBoostedTree----------------------")
         gb_bt = HistGradientBoostingClassifier(
                                         max_depth = 10,
                                         random_state = seed, verbose=1)
@@ -128,14 +120,12 @@ def train(args=get_args()):
 
     # Ada Boost
     if args.model == "AdaBoost" or "All":
-        print("AdaBoost----------------------")
         ad_bt = AdaBoostClassifier(n_estimators=100, random_state=seed)
         ad_bt.fit(X_train, y_train)
         models["AdaBoost"] = ad_bt
 
     # Neural Net
     if args.model == "NeuralNet" or "All":
-        print("NeuralNet----------------------")
         nn_clf = MLPClassifier(random_state=1, max_iter=300).fit(X_train, y_train)
         nn_clf.fit(X_train, y_train)
         models["NeuralNet"] = ad_bt
