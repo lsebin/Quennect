@@ -28,3 +28,6 @@
    
    To use this virtual environment,
    `conda activate qnct`
+
+5. Running Supervised Learning model
+   * All the results will be kept as .log file under result folder. You can run the modelComparison files using `bash src/run_model.sh`
