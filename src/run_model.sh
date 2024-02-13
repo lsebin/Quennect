@@ -3,10 +3,12 @@ now=${today}
 
 seed=42
 MODEL=All
+run=pytorch
 
 mkdir result/${now}
-mkdir result/${now}/seed_${seed}
+mkdir result/${now}/${run}
+mkdir result/${now}/${run}/seed_${seed}
 
 # 'RidgeRegression', 'LassoRegression', 'Perceptron', 'LinearSVM', 'RBFSVM', 'RandomForest', 'GradientBoostedTree', 'AdaBoost', 'NeuralNet'
 
-nohup python -u src/modelComparison_undersample.py --model ${MODEL} > result/${now}/seed_${seed}/${MODEL}.log &
+nohup python -u src/modelComparison_${run}.py --model ${MODEL} > result/${now}/${run}/seed_${seed}/${MODEL}.log &
