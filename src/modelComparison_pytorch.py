@@ -12,7 +12,9 @@ from torch.utils.data import DataLoader
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--layer", type=float, default=3)
-    parser.add_argument("--params", type=float, default=512)
+    parser.add_argument("--hidden", type=int, default=128)
+    parser.add_argument("--hidden1", type=int, default=64)
+    parser.add_argument("--hidden2", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--seed", type=float, default=42)
     
@@ -36,7 +38,7 @@ class Q_vecDataset(torch.utils.data.Dataset):
 
         return X, y
 
-def prepare_data():
+def prepare_data(args=get_args()):
     q_cleaned = pd.read_csv('data/data_vectorized_240228.csv')
     q_cleaned.drop(['ia_status_Facility Study', 'ia_status_Feasibility Study',
         'ia_status_IA Executed', 'ia_status_Operational',
@@ -56,7 +58,7 @@ def prepare_data():
     features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
     target = q_cleaned['ia_status_Withdrawn']
 
-    seed = 42
+    seed = args.seed
 
     rus = RandomUnderSampler(random_state=seed)
     X_rus, y_rus= rus.fit_resample(features, target)
@@ -66,6 +68,8 @@ def prepare_data():
     return X_train, X_test, y_train, y_test
 
 def run(args=get_args()):
+    # print(args.hidden, args.hidden1, args.hidden2)
+    # exit()
     X_train, X_test, y_train, y_test = prepare_data()
     training_data = Q_vecDataset(X_rus = X_train, y_rus = y_train, train=True)
     test_data = Q_vecDataset(X_rus = X_test, y_rus = y_test, train=False)
@@ -76,11 +80,11 @@ def run(args=get_args()):
     # params: shuffle, num_workers, drop_last, etc...
     train_dataloader = DataLoader(training_data, batch_size=batch_size)
     test_dataloader = DataLoader(test_data, batch_size=batch_size)
-    iparam = 0
+    input_dim = 0
     for X, y in test_dataloader:# X = image, y = label
         print(f"Shape of X [N, C, H, W]: {X.shape}") # Batch Dimension, Channel, Feature #
         print(f"Shape of y: {y.shape} {y.dtype}")
-        iparam =list(X.size())[2]
+        input_dim =list(X.size())[2]
         break
 
     device = "cpu"
@@ -91,10 +95,8 @@ def run(args=get_args()):
         
     print(f"Using {device} device")
 
+
     # Define model
-    # TODO: what exactly is nn.Module? differece between nn.Module.Functional? 
-    # Functional is not a full layer -> just arithmetic operation(does not have trainable parameters like weight, bias, etc) therefore use for usu simple operation
-    # Architecture of the model
     # In fully connected nn, number of units should always decrease
     # Neural network -> input-hidden-output layers
     class NeuralNetwork(nn.Module): # nn.Module = base case for all neural network modules
@@ -102,17 +104,15 @@ def run(args=get_args()):
         def __init__(self):
             super().__init__()
             self.flatten = nn.Flatten()
-            self.linear_relu_stack = nn.Sequential( # TODO: what is diff btw module and sequential?
-                                                # nn.Sequential = sequential container where it accepts any input and forwards it to the first module and chains the output
-                                                # allows to treat multiple layers as one container -> quickly implements sequential modules but module has more flexibility 
-                nn.Linear(iparam, 128), # apply linear transformation to the incoming data : y = x*W^T+b
+            self.linear_relu_stack = nn.Sequential(
+                nn.Linear(input_dim, int(args.hidden)), # apply linear transformation to the incoming data : y = x*W^T+b
                                         # weight here will be size of output * input
                 nn.ReLU(),  # rectified linear unit function: 0 for values < 0 and linear function if > 0
-                nn.Linear(128, 64),
+                nn.Linear(int(args.hidden), int(args.hidden1)),
                 nn.ReLU(),
-                # nn.Linear(64, 32),
-                # nn.ReLU(),
-                nn.Linear(64, 1),
+                nn.Linear(args.hidden1, args.hidden2),
+                nn.ReLU(),
+                nn.Linear(args.hidden2, 1),
             )
             self.sig = nn.Sigmoid()
             
@@ -120,8 +120,6 @@ def run(args=get_args()):
             x = self.flatten(x) # collapse into one dimensions
             x = self.linear_relu_stack(x)
             x = self.sig(x)
-            # print(x)
-            # exit() 
             return x
         
 
@@ -131,14 +129,17 @@ def run(args=get_args()):
     loss_fn = nn.BCELoss() # log loss [0, 1]
     print(model.parameters())
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3) # lr = learning rate
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr) # lr = learning rate
 
     def train(dataloader, model, loss_fn, optimizer):
         size = len(dataloader.dataset)
+        num_batches = len(dataloader)
+        correct , train_loss = 0, 0
         model.train()
         for batch, (X, y) in enumerate(dataloader):
             X, y = X.to(device).to(torch.float32), y.to(device).to(torch.float32)
             pred = model(X)
+            correct += (torch.round(pred) == y).type(torch.float).sum().item() 
             # print(pred, y)
             loss = loss_fn(pred, y)
 
@@ -146,10 +147,14 @@ def run(args=get_args()):
             optimizer.zero_grad()
             loss.backward() 
             optimizer.step()
-            
-            if batch % 100 == 0: 
-                loss, current = abs(loss.item()), (batch + 1) * len(X)
-                print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+            train_loss += (loss.item())
+
+        train_loss /= num_batches 
+        correct /= size 
+        print(f"Train: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {train_loss:>8f} \n")
+        return correct, train_loss
+
+        
                 
     def test(dataloader, model, loss_fn):
         size = len(dataloader.dataset)
@@ -163,19 +168,20 @@ def run(args=get_args()):
                 # print(pred)
                 test_loss += loss_fn(pred, y).item() 
                 correct += (torch.round(pred) == y).type(torch.float).sum().item() 
-        test_loss /= num_batches 
-                                
+        test_loss /= num_batches      
         correct /= size # the overall accuracy 
-        print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+        print(f"Test: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+        return correct, test_loss
         
+
     # one training epoch -> algo made one pass through the training dataset
     epochs = 30
+    tl = []
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(train_dataloader, model, loss_fn, optimizer)
-        test(test_dataloader, model, loss_fn)
+        train_acc, train_loss = train(train_dataloader, model, loss_fn, optimizer)
+        test_acc, test_loss= test(test_dataloader, model, loss_fn)
     print("Done!")
-    
 
 if __name__ == "__main__":
     run()
