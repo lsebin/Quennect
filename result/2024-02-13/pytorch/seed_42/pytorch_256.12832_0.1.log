@@ -1,0 +1,258 @@
+Shape of X [N, C, H, W]: torch.Size([64, 1, 140])
+Shape of y: torch.Size([64, 1]) torch.float64
+Using cpu device
+NeuralNetwork(
+  (flatten): Flatten(start_dim=1, end_dim=-1)
+  (linear_relu_stack): Sequential(
+    (0): Linear(in_features=140, out_features=256, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=1, bias=True)
+  )
+  (sig): Sigmoid()
+)
+<generator object Module.parameters at 0x7f498ed149e0>
+Epoch 1
+-------------------------------
+Train: 
+ Accuracy: 51.4%, Avg loss: 5.160178 
+
+Test: 
+ Accuracy: 63.5%, Avg loss: 0.648417 
+
+Epoch 2
+-------------------------------
+Train: 
+ Accuracy: 68.8%, Avg loss: 0.524297 
+
+Test: 
+ Accuracy: 74.3%, Avg loss: 0.501116 
+
+Epoch 3
+-------------------------------
+Train: 
+ Accuracy: 74.1%, Avg loss: 0.433597 
+
+Test: 
+ Accuracy: 70.9%, Avg loss: 0.485235 
+
+Epoch 4
+-------------------------------
+Train: 
+ Accuracy: 76.3%, Avg loss: 0.387569 
+
+Test: 
+ Accuracy: 71.3%, Avg loss: 0.547755 
+
+Epoch 5
+-------------------------------
+Train: 
+ Accuracy: 78.4%, Avg loss: 0.383588 
+
+Test: 
+ Accuracy: 72.2%, Avg loss: 0.508436 
+
+Epoch 6
+-------------------------------
+Train: 
+ Accuracy: 76.0%, Avg loss: 0.369912 
+
+Test: 
+ Accuracy: 71.7%, Avg loss: 0.562695 
+
+Epoch 7
+-------------------------------
+Train: 
+ Accuracy: 78.3%, Avg loss: 0.468984 
+
+Test: 
+ Accuracy: 70.9%, Avg loss: 0.519510 
+
+Epoch 8
+-------------------------------
+Train: 
+ Accuracy: 76.8%, Avg loss: 0.363076 
+
+Test: 
+ Accuracy: 69.1%, Avg loss: 0.581467 
+
+Epoch 9
+-------------------------------
+Train: 
+ Accuracy: 77.2%, Avg loss: 0.362711 
+
+Test: 
+ Accuracy: 74.3%, Avg loss: 0.459742 
+
+Epoch 10
+-------------------------------
+Train: 
+ Accuracy: 81.0%, Avg loss: 0.329262 
+
+Test: 
+ Accuracy: 71.7%, Avg loss: 0.501106 
+
+Epoch 11
+-------------------------------
+Train: 
+ Accuracy: 80.5%, Avg loss: 0.323026 
+
+Test: 
+ Accuracy: 70.4%, Avg loss: 0.549874 
+
+Epoch 12
+-------------------------------
+Train: 
+ Accuracy: 79.1%, Avg loss: 0.318816 
+
+Test: 
+ Accuracy: 74.3%, Avg loss: 0.534451 
+
+Epoch 13
+-------------------------------
+Train: 
+ Accuracy: 82.0%, Avg loss: 0.312749 
+
+Test: 
+ Accuracy: 70.9%, Avg loss: 0.537685 
+
+Epoch 14
+-------------------------------
+Train: 
+ Accuracy: 79.9%, Avg loss: 0.315928 
+
+Test: 
+ Accuracy: 69.1%, Avg loss: 0.597131 
+
+Epoch 15
+-------------------------------
+Train: 
+ Accuracy: 77.5%, Avg loss: 0.330387 
+
+Test: 
+ Accuracy: 72.2%, Avg loss: 0.620169 
+
+Epoch 16
+-------------------------------
+Train: 
+ Accuracy: 79.9%, Avg loss: 0.322977 
+
+Test: 
+ Accuracy: 71.7%, Avg loss: 0.613031 
+
+Epoch 17
+-------------------------------
+Train: 
+ Accuracy: 81.7%, Avg loss: 0.313512 
+
+Test: 
+ Accuracy: 72.6%, Avg loss: 0.722759 
+
+Epoch 18
+-------------------------------
+Train: 
+ Accuracy: 80.4%, Avg loss: 0.327811 
+
+Test: 
+ Accuracy: 70.4%, Avg loss: 0.513576 
+
+Epoch 19
+-------------------------------
+Train: 
+ Accuracy: 81.0%, Avg loss: 0.319648 
+
+Test: 
+ Accuracy: 70.4%, Avg loss: 0.739397 
+
+Epoch 20
+-------------------------------
+Train: 
+ Accuracy: 80.0%, Avg loss: 0.337588 
+
+Test: 
+ Accuracy: 73.9%, Avg loss: 0.599237 
+
+Epoch 21
+-------------------------------
+Train: 
+ Accuracy: 81.1%, Avg loss: 0.432267 
+
+Test: 
+ Accuracy: 70.9%, Avg loss: 0.665012 
+
+Epoch 22
+-------------------------------
+Train: 
+ Accuracy: 78.7%, Avg loss: 0.355619 
+
+Test: 
+ Accuracy: 72.2%, Avg loss: 0.564447 
+
+Epoch 23
+-------------------------------
+Train: 
+ Accuracy: 79.0%, Avg loss: 0.356398 
+
+Test: 
+ Accuracy: 73.0%, Avg loss: 0.590198 
+
+Epoch 24
+-------------------------------
+Train: 
+ Accuracy: 79.5%, Avg loss: 0.332742 
+
+Test: 
+ Accuracy: 73.0%, Avg loss: 0.705554 
+
+Epoch 25
+-------------------------------
+Train: 
+ Accuracy: 79.5%, Avg loss: 0.335673 
+
+Test: 
+ Accuracy: 73.5%, Avg loss: 0.624605 
+
+Epoch 26
+-------------------------------
+Train: 
+ Accuracy: 80.2%, Avg loss: 0.327701 
+
+Test: 
+ Accuracy: 73.5%, Avg loss: 0.786541 
+
+Epoch 27
+-------------------------------
+Train: 
+ Accuracy: 78.9%, Avg loss: 0.330544 
+
+Test: 
+ Accuracy: 73.5%, Avg loss: 0.783949 
+
+Epoch 28
+-------------------------------
+Train: 
+ Accuracy: 79.5%, Avg loss: 0.337905 
+
+Test: 
+ Accuracy: 73.9%, Avg loss: 0.620106 
+
+Epoch 29
+-------------------------------
+Train: 
+ Accuracy: 79.8%, Avg loss: 0.324990 
+
+Test: 
+ Accuracy: 75.2%, Avg loss: 0.834901 
+
+Epoch 30
+-------------------------------
+Train: 
+ Accuracy: 80.3%, Avg loss: 0.329565 
+
+Test: 
+ Accuracy: 74.8%, Avg loss: 0.652185 
+
+Done!

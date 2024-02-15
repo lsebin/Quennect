@@ -17,6 +17,7 @@ def get_args():
     parser.add_argument("--hidden2", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--seed", type=float, default=42)
+    parser.add_argument("--epoch", type=int, default=30)
     
     return parser.parse_args()
 
@@ -74,7 +75,7 @@ def run(args=get_args()):
     training_data = Q_vecDataset(X_rus = X_train, y_rus = y_train, train=True)
     test_data = Q_vecDataset(X_rus = X_test, y_rus = y_test, train=False)
 
-    batch_size = 64
+    batch_size = 200
 
     # Create data loaders.
     # params: shuffle, num_workers, drop_last, etc...
@@ -112,7 +113,9 @@ def run(args=get_args()):
                 nn.ReLU(),
                 nn.Linear(args.hidden1, args.hidden2),
                 nn.ReLU(),
-                nn.Linear(args.hidden2, 1),
+                nn.Linear(args.hidden2, 64),
+                nn.ReLU(),
+                nn.Linear(64, 1),
             )
             self.sig = nn.Sigmoid()
             
@@ -175,7 +178,7 @@ def run(args=get_args()):
         
 
     # one training epoch -> algo made one pass through the training dataset
-    epochs = 30
+    epochs = args.epoch
     tl = []
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
