@@ -54,6 +54,7 @@ def prepare_data(args=get_args()):
             exempt.append(col)
     q_cleaned.drop(columns = exempt, inplace=True)
     q_cleaned=(q_cleaned-q_cleaned.min())/((q_cleaned.max()-q_cleaned.min()))
+    # TODO: Use batch normalization here - subtract by mean of data + divide by variance
     # print(q_cleaned.max())
 
     features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
@@ -78,6 +79,7 @@ def run(args=get_args()):
     batch_size = 200
 
     # Create data loaders.
+    # TODO: Double check that batches are as expected
     # params: shuffle, num_workers, drop_last, etc...
     train_dataloader = DataLoader(training_data, batch_size=batch_size)
     test_dataloader = DataLoader(test_data, batch_size=batch_size)
@@ -117,7 +119,9 @@ def run(args=get_args()):
                 nn.ReLU(),
                 nn.Linear(64, 1),
             )
-            self.sig = nn.Sigmoid()
+            self.sig = nn.Sigmoid() # TODO: try to remove sigmoid
+            # TODO: Check what the previous model was doing, if there was regularization, learning rate, etc.
+            # TODO: Batch normalization earlier in the code
             
         def forward(self, x): 
             x = self.flatten(x) # collapse into one dimensions
@@ -130,6 +134,7 @@ def run(args=get_args()):
     print(model)
 
     loss_fn = nn.BCELoss() # log loss [0, 1]
+    # TODO: Check if BCELoss takes 1 value or 2 - what inputs exactly it needs
     print(model.parameters())
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr) # lr = learning rate
