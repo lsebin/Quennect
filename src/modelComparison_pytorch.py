@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 import torch
 from torch import nn
 from torch.utils.data import DataLoader 
@@ -40,25 +41,29 @@ class Q_vecDataset(torch.utils.data.Dataset):
         return X, y
 
 def prepare_data(args=get_args()):
-    q_cleaned = pd.read_csv('data/data_vectorized_240228.csv')
-    q_cleaned.drop(['ia_status_Facility Study', 'ia_status_Feasibility Study',
+    q_cleaned_old = pd.read_csv('data/data_vectorized_240228.csv')
+    q_cleaned_old.drop(['ia_status_Facility Study', 'ia_status_Feasibility Study',
         'ia_status_IA Executed', 'ia_status_Operational',
         'ia_status_System Impact Study', 'Unnamed: 0'], axis = 1, inplace=True)
 
-    # min-max scale the vectors
-    #q_cleaned.apply(lambda x: (x-x.min())/(x.max()-x.min()) if x.max() > 1 else x, axis=0)
-    # print(q_cleaned.max())
     exempt = []
-    for col in list(q_cleaned.columns):
-        if q_cleaned[col].max() < 1:
+    for col in list(q_cleaned_old.columns):
+        if q_cleaned_old[col].max() < 1:
             exempt.append(col)
-    q_cleaned.drop(columns = exempt, inplace=True)
-    q_cleaned=(q_cleaned-q_cleaned.min())/((q_cleaned.max()-q_cleaned.min()))
-    # TODO: Use batch normalization here - subtract by mean of data + divide by variance
+    q_cleaned_old.drop(columns = exempt, inplace=True)
+    
+    # Use batch normalization here - subtract by mean of data + divide by variance
+    scaler = StandardScaler()
+    scaler.fit(q_cleaned_old)
+    q_cleaned_array = scaler.transform(q_cleaned_old)
+    q_cleaned = pd.DataFrame(q_cleaned_array, columns=q_cleaned_old.columns)
+    
+    # OLD: min-max scale the vectors
+    #q_cleaned.apply(lambda x: (x-x.min())/(x.max()-x.min()) if x.max() > 1 else x, axis=0)
     # print(q_cleaned.max())
 
     features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
-    target = q_cleaned['ia_status_Withdrawn']
+    target = q_cleaned_old['ia_status_Withdrawn']
 
     seed = args.seed
 
@@ -119,15 +124,15 @@ def run(args=get_args()):
                 nn.ReLU(),
                 nn.Linear(64, 1),
             )
-            self.sig = nn.Sigmoid() # TODO: try to remove sigmoid
+            self.sig = nn.Sigmoid() 
+            # TODO: try to remove sigmoid. We remove sigmoid because BCELoss expects raw logits
             # TODO: Check what the previous model was doing, if there was regularization, learning rate, etc.
-            # TODO: Batch normalization earlier in the code
             
         def forward(self, x): 
             x = self.flatten(x) # collapse into one dimensions
             x = self.linear_relu_stack(x)
             x = self.sig(x)
-            return x
+            return x.squeeze() # changed to squeeze
         
 
     model = NeuralNetwork().to(device)
@@ -147,6 +152,9 @@ def run(args=get_args()):
         for batch, (X, y) in enumerate(dataloader):
             X, y = X.to(device).to(torch.float32), y.to(device).to(torch.float32)
             pred = model(X)
+            # added squeezing y
+            y = y.squeeze()
+            # print(pred, y)
             correct += (torch.round(pred) == y).type(torch.float).sum().item() 
             # print(pred, y)
             loss = loss_fn(pred, y)
@@ -173,6 +181,7 @@ def run(args=get_args()):
             for X, y in dataloader:
                 X, y = X.to(device).to(torch.float32), y.to(device).to(torch.float32)
                 pred = model(X)
+                y = y.squeeze()
                 # print(pred)
                 test_loss += loss_fn(pred, y).item() 
                 correct += (torch.round(pred) == y).type(torch.float).sum().item() 
