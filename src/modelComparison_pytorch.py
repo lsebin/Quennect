@@ -18,7 +18,7 @@ def get_args():
     parser.add_argument("--hidden2", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--seed", type=float, default=42)
-    parser.add_argument("--epoch", type=int, default=30)
+    parser.add_argument("--epoch", type=int, default=50)
     
     return parser.parse_args()
 
@@ -125,7 +125,7 @@ def run(args=get_args()):
                 nn.Linear(64, 1),
             )
             self.sig = nn.Sigmoid() 
-            # TODO: try to remove sigmoid. We remove sigmoid because BCELoss expects raw logits
+            # TODO: BCELoss does not expect raw logits - every value should be in the range [0,1].
             # TODO: Check what the previous model was doing, if there was regularization, learning rate, etc.
             
         def forward(self, x): 
@@ -136,7 +136,7 @@ def run(args=get_args()):
         
 
     model = NeuralNetwork().to(device)
-    print(model)
+    # print(model)
 
     loss_fn = nn.BCELoss() # log loss [0, 1]
     # TODO: Check if BCELoss takes 1 value or 2 - what inputs exactly it needs
@@ -175,15 +175,16 @@ def run(args=get_args()):
     def test(dataloader, model, loss_fn):
         size = len(dataloader.dataset)
         num_batches = len(dataloader)
-        model.eval() # parameters no update
         test_loss, correct = 0, 0
+        model.eval() # parameters no update
         with torch.no_grad(): # disable gradient calculation
             for X, y in dataloader:
                 X, y = X.to(device).to(torch.float32), y.to(device).to(torch.float32)
                 pred = model(X)
                 y = y.squeeze()
-                # print(pred)
-                test_loss += loss_fn(pred, y).item() 
+                # print(pred, y)
+                loss = loss_fn(pred,y)
+                test_loss += loss.item() 
                 correct += (torch.round(pred) == y).type(torch.float).sum().item() 
         test_loss /= num_batches      
         correct /= size # the overall accuracy 

@@ -24,25 +24,60 @@ def get_args():
     return parser.parse_args()
 
 # loading our dataset
+# add cleaning data
 def prepare_data():
-    q_cleaned = pd.read_csv('data/data_vectorized_240228.csv')
+    
+    q_cleaned_old = pd.read_csv('data/data_vectorized_240228.csv')
+    q_cleaned_old.drop(['ia_status_Facility Study', 'ia_status_Feasibility Study',
+        'ia_status_IA Executed', 'ia_status_Operational',
+        'ia_status_System Impact Study', 'Unnamed: 0'], axis = 1, inplace=True)
 
-    features = q_cleaned.drop(['ia_status_Facility Study', 'ia_status_Feasibility Study',
-       'ia_status_IA Executed', 'ia_status_Operational',
-       'ia_status_System Impact Study', 'ia_status_Withdrawn'], axis = 1)
-    target = q_cleaned['ia_status_Withdrawn']
+    exempt = []
+    for col in list(q_cleaned_old.columns):
+        if q_cleaned_old[col].max() < 1:
+            exempt.append(col)
+    q_cleaned_old.drop(columns = exempt, inplace=True)
+    
+    # Use batch normalization here - subtract by mean of data + divide by variance
+    scaler = StandardScaler()
+    scaler.fit(q_cleaned_old)
+    q_cleaned_array = scaler.transform(q_cleaned_old)
+    q_cleaned = pd.DataFrame(q_cleaned_array, columns=q_cleaned_old.columns)
+    
+    # OLD: min-max scale the vectors
+    #q_cleaned.apply(lambda x: (x-x.min())/(x.max()-x.min()) if x.max() > 1 else x, axis=0)
+    # print(q_cleaned.max())
 
+    features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
+    target = q_cleaned_old['ia_status_Withdrawn']
 
-    # Conduct 80/20 train test split with random_state = 42
     seed = 42
 
     rus = RandomUnderSampler(random_state=seed)
     X_rus, y_rus= rus.fit_resample(features, target)
     X_train, X_test, y_train, y_test = train_test_split(X_rus, y_rus,
-                                                        test_size = 0.2,
-                                                        random_state = seed)
-    
+                                                            test_size = 0.2,
+                                                            random_state = seed)
     return X_train, X_test, y_train, y_test
+
+    # q_cleaned = pd.read_csv('data/data_vectorized_240228.csv')
+
+    # features = q_cleaned.drop(['ia_status_Facility Study', 'ia_status_Feasibility Study',
+    #    'ia_status_IA Executed', 'ia_status_Operational',
+    #    'ia_status_System Impact Study', 'ia_status_Withdrawn'], axis = 1)
+    # target = q_cleaned['ia_status_Withdrawn']
+
+
+    # # Conduct 80/20 train test split with random_state = 42
+    # seed = 42
+
+    # rus = RandomUnderSampler(random_state=seed)
+    # X_rus, y_rus= rus.fit_resample(features, target)
+    # X_train, X_test, y_train, y_test = train_test_split(X_rus, y_rus,
+    #                                                     test_size = 0.2,
+    #                                                     random_state = seed)
+    
+    # return X_train, X_test, y_train, y_test
 
 def train(args=get_args()): 
     X_train, X_test, y_train, y_test = prepare_data()
@@ -129,9 +164,9 @@ def train(args=get_args()):
     # Neural Net
     if args.model == "NeuralNet" or "All":
         print("NeuralNet----------------------")
-        nn_clf = MLPClassifier(random_state=1, max_iter=300).fit(X_train, y_train)
+        nn_clf = MLPClassifier(random_state=42, max_iter=50)
         nn_clf.fit(X_train, y_train)
-        models["NeuralNet"] = ad_bt
+        models["NeuralNet"] = nn_clf
 
     # Performance Comparison
     for md in models: 
