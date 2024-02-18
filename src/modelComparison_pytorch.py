@@ -1,6 +1,6 @@
 # imports
 import pandas as pd
-import argparse
+import argparse, os
 import numpy as np
 import matplotlib.pyplot as plt
 from imblearn.under_sampling import RandomUnderSampler
@@ -58,9 +58,6 @@ def prepare_data(args=get_args()):
     q_cleaned_array = scaler.transform(q_cleaned_old)
     q_cleaned = pd.DataFrame(q_cleaned_array, columns=q_cleaned_old.columns)
     
-    # OLD: min-max scale the vectors
-    #q_cleaned.apply(lambda x: (x-x.min())/(x.max()-x.min()) if x.max() > 1 else x, axis=0)
-    # print(q_cleaned.max())
 
     features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
     target = q_cleaned_old['ia_status_Withdrawn']
@@ -122,24 +119,28 @@ def run(args=get_args()):
                 nn.ReLU(),
                 nn.Linear(args.hidden2, 64),
                 nn.ReLU(),
-                nn.Linear(64, 1),
+                nn.Linear(64, 2),
             )
-            self.sig = nn.Sigmoid() 
+            #self.sig = nn.Sigmoid() 
+            #self.softmax = nn.Softmax(dim=1)
             # TODO: BCELoss does not expect raw logits - every value should be in the range [0,1].
             # TODO: Check what the previous model was doing, if there was regularization, learning rate, etc.
             
         def forward(self, x): 
             x = self.flatten(x) # collapse into one dimensions
             x = self.linear_relu_stack(x)
-            x = self.sig(x)
-            return x.squeeze() # changed to squeeze
+            #x = self.sig(x)
+            #x = self.softmax(x)
+            return x # changed to squeeze
         
 
     model = NeuralNetwork().to(device)
     # print(model)
 
-    loss_fn = nn.BCELoss() # log loss [0, 1]
+    loss_fn = nn.CrossEntropyLoss() # log loss [0, 1]
     # TODO: Check if BCELoss takes 1 value or 2 - what inputs exactly it needs
+        # BCEloss takes 1 value, CrossEntropyLoss takes 2
+        # migrated to CrossEntropyLoss so that we are getting probabilities for each class
     print(model.parameters())
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr) # lr = learning rate
@@ -150,15 +151,16 @@ def run(args=get_args()):
         correct , train_loss = 0, 0
         model.train()
         for batch, (X, y) in enumerate(dataloader):
-            X, y = X.to(device).to(torch.float32), y.to(device).to(torch.float32)
-            pred = model(X)
-            # added squeezing y
+            X, y = X.to(device).to(torch.float32), y.to(device)
             y = y.squeeze()
+            pred = model(X)
             # print(pred, y)
-            correct += (torch.round(pred) == y).type(torch.float).sum().item() 
-            # print(pred, y)
+            # print(pred.dtype, y.dtype)
             loss = loss_fn(pred, y)
-
+            _, lbls = torch.max(pred.data, 1)
+            correct += (lbls == y).type(torch.float).sum().item() 
+            # print(pred, y)
+            
             # Backpropagation
             optimizer.zero_grad()
             loss.backward() 
@@ -179,13 +181,15 @@ def run(args=get_args()):
         model.eval() # parameters no update
         with torch.no_grad(): # disable gradient calculation
             for X, y in dataloader:
-                X, y = X.to(device).to(torch.float32), y.to(device).to(torch.float32)
-                pred = model(X)
+                X, y = X.to(device).to(torch.float32), y.to(device)
                 y = y.squeeze()
-                # print(pred, y)
-                loss = loss_fn(pred,y)
+                pred = model(X)
+                # print(outputs,pred, y)
+
+                _, lbls = torch.max(pred.data, 1)
+                correct += (lbls == y).type(torch.float).sum().item() 
+                loss = loss_fn(pred, y)
                 test_loss += loss.item() 
-                correct += (torch.round(pred) == y).type(torch.float).sum().item() 
         test_loss /= num_batches      
         correct /= size # the overall accuracy 
         print(f"Test: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
@@ -193,13 +197,49 @@ def run(args=get_args()):
         
 
     # one training epoch -> algo made one pass through the training dataset
-    epochs = args.epoch
-    tl = []
+    epochs = 200 #args.epoch
+    test_acc_list = []
+    test_loss_list = []
+    train_acc_list = []
+    train_loss_list = []
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         train_acc, train_loss = train(train_dataloader, model, loss_fn, optimizer)
         test_acc, test_loss= test(test_dataloader, model, loss_fn)
+        
+        train_acc_list.append(train_acc)
+        train_loss_list.append(train_loss)
+        test_acc_list.append(test_acc)
+        test_loss_list.append(test_loss) 
     print("Done!")
+    
+    filepath = os.path.join("fig", "supervised")
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
+    
+    
+    fig, ax = plt.subplots(figsize=(10,5))
+    x = range(epochs)
+    plt.plot(x, train_acc_list, label = "Train Accuracy")
+    plt.plot(x, test_acc_list, label = "Test Accuracy")
+    fig.suptitle('Accuracy vs Epochs', fontsize=20)
+    plt.xlabel("Epoch number")
+    plt.ylabel("Accuracy")
+    plt.legend()
+    #plt.savefig("acc.png")
+    plt.savefig(os.path.join(filepath, f"acc_{epochs}.png"))
+    
+    fig, ax = plt.subplots(figsize=(10,5))
+    fig.suptitle('Loss vs Epochs', fontsize=20)
+    x = range(epochs)
+    plt.plot(x, train_loss_list, label = "Train Loss")
+    plt.plot(x, test_loss_list, label = "Test Loss")
+    plt.xlabel("Epoch number")
+    plt.ylabel("Loss")
+    plt.legend()
+    plt.savefig(os.path.join(filepath, f"loss_{epochs}.png"))
+    
+    print("Saved!")
 
 if __name__ == "__main__":
     run()
