@@ -8,7 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import torch
 from torch import nn
-from torch.utils.data import DataLoader 
+from torch.utils.data import DataLoader
+from sklearn.model_selection import KFold 
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -71,6 +72,12 @@ def prepare_data(args=get_args()):
                                                             random_state = seed)
     return X_train, X_test, y_train, y_test
 
+hyperparams = {
+    'lr': [1e-3, 1e-4],
+    'hidden': [128, 256],
+    'batch_size': [100, 200]
+}
+
 def run(args=get_args()):
     # print(args.hidden, args.hidden1, args.hidden2)
     # exit()
@@ -113,6 +120,7 @@ def run(args=get_args()):
                 nn.Linear(input_dim, int(args.hidden)), # apply linear transformation to the incoming data : y = x*W^T+b
                                         # weight here will be size of output * input
                 nn.ReLU(),  # rectified linear unit function: 0 for values < 0 and linear function if > 0
+                nn.Dropout(p=0.5), #add dropout to avoid overfitting
                 nn.Linear(int(args.hidden), int(args.hidden1)),
                 nn.ReLU(),
                 nn.Linear(args.hidden1, args.hidden2),
@@ -143,7 +151,7 @@ def run(args=get_args()):
         # migrated to CrossEntropyLoss so that we are getting probabilities for each class
     print(model.parameters())
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr) # lr = learning rate
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-5) # lr = learning rate, weight decay for l2 regularization
 
     def train(dataloader, model, loss_fn, optimizer):
         size = len(dataloader.dataset)
@@ -242,4 +250,17 @@ def run(args=get_args()):
     print("Saved!")
 
 if __name__ == "__main__":
-    run()
+    # Parse command-line arguments once
+    args = get_args()
+
+    # If running experiments manually, override args here
+    for lr in hyperparams['lr']:
+        for hidden in hyperparams['hidden']:
+            for batch_size in hyperparams['batch_size']:
+                # Override args for the current loop iteration
+                args.lr = lr
+                args.hidden = hidden
+                args.batch_size = batch_size
+                
+                # Now call your training function with these args
+                run(args)
