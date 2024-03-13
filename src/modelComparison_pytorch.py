@@ -147,6 +147,7 @@ if __name__ == "__main__":
         print(f"Shape of y: {y.shape} {y.dtype}")
         input_dim =list(X.size())[2]
         break
+    print("input_dim", input_dim)
 
     device = "cpu"
     if torch.cuda.is_available():
