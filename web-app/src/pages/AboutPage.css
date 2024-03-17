@@ -12,3 +12,28 @@
 .items {
   margin: 1rem 17rem 1rem 17rem;
 }
+
+.img-profile {
+  width: 100%; /* Adjusts image width to fit the container */
+  height: auto; /* Maintains the aspect ratio */
+  max-width: 200px; /* Maximum width; adjust as needed */
+  max-height: 350px; /* Maximum height; adjust as needed */
+  object-fit: cover; /* Ensures the image covers the area, might crop */
+  border-radius: 15px; /* Slightly rounded corners */
+}
+
+.profile-card {
+  text-align: center; /* Centers the text */
+  margin-bottom: 40px; /* Spacing between profiles */
+}
+
+.profile-name {
+  margin-top: 10px; /* Spacing above the name */
+  font-weight: bold;
+}
+
+.profile-role,
+.profile-email {
+  margin-top: 5px; /* Spacing for consistency */
+  font-style: italic;
+}

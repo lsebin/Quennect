@@ -1,10 +1,16 @@
 import { React, useState, useEffect } from "react";
+import Alina from '/Users/alinaho/Quennect/web-app/src/Images/Alina.png';
+import Soyoon from '/Users/alinaho/Quennect/web-app/src/Images/Soyoon.png';
+import Caroline from '/Users/alinaho/Quennect/web-app/src/Images/Caroline.png'
+import Shane from '/Users/alinaho/Quennect/web-app/src/Images/Shane.png'
+import Sebin from '/Users/alinaho/Quennect/web-app/src/Images/Sebin.png'
 //import PropTypes from "prop-types";
 //import { displayRecent, displayUrgent } from "../api/home";
 import "./AboutPage.css";
 //import './MyProfilePage.css';
 //import ItemPostingTable from "../components/ItemPostingTable";
 import { HOME_ITEM_PER_PAGE } from "../utils/utils";
+
 
 function AboutPage(props) {
   /*
@@ -87,11 +93,10 @@ function AboutPage(props) {
   */
   return (
     <div id="about-page" className="container-fluid">
-      <div className="row justify-content-center">
-        <div className="col-6">
-          <b>About</b>
-          <br />
-          <b>Quennect</b> is designed to assist developers in navigating
+      <div className="row justify-content-center text-center mb-5">
+        <div className="col-8">
+          <h2>About Quennect</h2>
+          <p><b>Quennect</b> is designed to assist developers in navigating
           the interconnection queue by predicting the likelihood of a
           project’s progression, estimating wait times, and suggesting
           parameter changes to expedite the process. The interconnection
@@ -99,58 +104,44 @@ function AboutPage(props) {
           new energy generation and storage projects into the transmission
           grid. The project’s goal is to enhance the efficiency of the
           development and operation stages of renewable energy projects by
-          providing data-driven insights and recommendations.
+          providing data-driven insights and recommendations.</p>
         </div>
       </div>
       <div className="row justify-content-center">
-        <div className="col-3">
-          <b>ALINA HO</b>
-          <br />
-          Economics and Systems Engineering
-          <br />
-          <i>School of Engineering and Applied Science</i>
-          <br />
-          alinaho@seas.upenn.edu
+        {/* Updated profile cards for each member */}
+        <div className="col-3 profile-card">
+          <img src={Alina} alt="Alina Ho" className="img-fluid img-profile" />
+          <div className="profile-name">ALINA HO</div>
+          <div className="profile-role">Economics and Systems Engineering</div>
+          <div className="profile-email">alinaho@seas.upenn.edu</div>
         </div>
-        <div className="col-3">
-          <b>SOYOON PARK</b>
-          <br />
-          Computer Engineering and Mathematics
-          <br />
-          <i>School of Engineering and Applied Science</i>
-          <br />
-          soyoon@seas.upenn.edu
+        <div className="col-3 profile-card">
+          <img src={Soyoon} alt="Soyoon Park" className="img-fluid img-profile" />
+          <div className="profile-name">SOYOON PARK</div>
+          <div className="profile-role">Computer Engineering and Mathematics</div>
+          <div className="profile-email">soyoon@seas.upenn.edu</div>
         </div>
       </div>
       <div className="row justify-content-center">
-        <div className="col-3">
-          <b>SHANE WILLIAMS</b>
-          <br />
-          Systems Engineering
-          <br />
-          <i>School of Engineering and Applied Science</i>
-          <br />
-          shanetw@seas.upenn.edu
+        <div className="col-3 profile-card">
+          <img src={Shane} alt="Shane Williams" className="img-fluid img-profile" />
+          <div className="profile-name">SHANE WILLIAMS</div>
+          <div className="profile-role">Systems Engineering</div>
+          <div className="profile-email">shanetw@seas.upenn.edu</div>
         </div>
-        <div className="col-3">
-          <b>CAROLINE MAGDOLEN</b>
-          <br />
-          Systems Engineering and Environmental Science
-          <br />
-          <i>School of Engineering and Applied Science</i>
-          <br />
-          magdolen@seas.upenn.edu
+        <div className="col-3 profile-card">
+          <img src={Caroline} alt="Caroline Magdolen" className="img-fluid img-profile" />
+          <div className="profile-name">CAROLINE MAGDOLEN</div>
+          <div className="profile-role">Systems Engineering and Environmental Science</div>
+          <div className="profile-email">magdolen@seas.upenn.edu</div>
         </div>
       </div>
       <div className="row justify-content-center">
-        <div className="col-3">
-          <b>SEBIN LEE</b>
-          <br />
-          Computer Science
-          <br />
-          <i>School of Engineering and Applied Science</i>
-          <br />
-          seblee@seas.upenn.edu
+        <div className="col-3 profile-card">
+          <img src={Sebin} alt="Sebin Lee" className="img-fluid img-profile" />
+          <div className="profile-name">SEBIN LEE</div>
+          <div className="profile-role">Computer Science</div>
+          <div className="profile-email">seblee@seas.upenn.edu</div>
         </div>
       </div>
     </div>
