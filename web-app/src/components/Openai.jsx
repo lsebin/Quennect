@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import submit from "../api/openai";
 //import { Link } from "react-router-dom";
 //import { NAVBAR_HEIGHT } from "../utils/utils";
 //import { displayRecent, displayUrgent } from "../api/home";
@@ -107,12 +108,82 @@ function Openai() {
   const [inputText, setInputText] = useState('');
   const [responseText, setResponseText] = useState('');
 
+  /*
+  const [formData, setFormData] = useState({
+    region: '',
+    email: '',
+    message: ''
+  });
+  */
+
+  /*
+  //const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+  */
+
+
   const handleInputChange = (e) => {
     setInputText(e.target.value);
   };
 
+  const callSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await submit(
+      inputText
+    );
+
+    if (response.data) {
+      setResponseText(response.data.choices[0].message.content);
+    }
+
+    if (response.status === 201) {
+      // setErrMsg('Registration complete!');
+      // setShow(true);
+    } else {
+      // setErrMsg('Error occurred.');
+    }
+    // console.log(response.data);
+  };
+
+  /*
+  //<form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label for="email" clsas="form-label"> Email address </label>
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            value={formData.email}
+            onChange={ }
+            placeholder="name@example.com" />
+        </div>
+      </form>
+       <textarea
+          value={inputText}
+          //onChange={handleInputChange}
+          placeholder="Enter your input here..."
+          rows={4}
+          cols={50}
+        />
+        <br />
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Region
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+  */
+
   return (
     <div id="openai" className="container-fluid">
+
       <div className="row justify-content-center">
         <div className="col-3">
           Input prompt:
@@ -123,7 +194,31 @@ function Openai() {
           <input type="text" name="input-query" placeholder="enter input text here" value={inputText} onChange={handleInputChange} />
         </div>
       </div>
+      <div className="row">
+        <div className="col-12">
+          <button type="submit" className="btn btn-secondary" onClick={callSubmit}>
+            Submit
+          </button>
+        </div>
+      </div>
+      {responseText && (
+        <div className="container-fluid">
+          <div className="row justify-content-center">
+            <div className="col-12">
+              <b>Response:</b>
+            </div>
+
+          </div>
+          <div className="row justify-content-center">
+            <div className="col-10">
+              {responseText}
+            </div>
+          </div>
+        </div>)
+      }
     </div>
+
+
   );
 }
 
