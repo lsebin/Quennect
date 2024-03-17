@@ -1,0 +1,30 @@
+#navbar {
+    position: fixed;
+    z-index: 10000;
+    background-color: white;
+}
+
+#navbar a {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+#navbar>.row {
+    height: 100%;
+    align-items: center;
+}
+
+#logo {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+#nav-links {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#nav-links>a {
+    margin-right: 4rem;
+}

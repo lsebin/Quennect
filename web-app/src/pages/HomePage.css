@@ -1,0 +1,16 @@
+#home-page {
+  /* for testing purposes... when implementing, please remove height: 200vh */
+  height: 100vh;
+  /*font-family: Arial, sans-serif;*/
+  /*font-size: 15px;*/
+}
+
+.content-box {
+  background-color: antiquewhite;
+  height: 60%;
+  margin-bottom: 1%;
+}
+
+.items {
+  margin: 1rem 17rem 1rem 17rem;
+}
