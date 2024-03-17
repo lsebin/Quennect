@@ -229,10 +229,12 @@ if __name__ == "__main__":
     shap.initjs()        
     background_data =  X_train.to_numpy()
     background_data_tensor = torch.FloatTensor(background_data).to(device)  # Convert background data to tensor
-    explainer = shap.GradientExplainer(model, background_data_tensor)
+    explainer = shap.DeepExplainer(model, background_data_tensor)
     test_data_numpy = X_test.to_numpy()
     test_data_tensor = torch.tensor(test_data_numpy, dtype=torch.float).to(device)
-    shap_values = explainer.shap_values(test_data_tensor)
-    
-    shap.summary_plot(shap_values, test_data_numpy, feature_names=X_train.columns)
-    shap.force_plot(shap_values[0][0], test_data_numpy[0], feature_names=X_train.columns)
+    shap_values = explainer.shap_values(background_data_tensor)
+    feature_names = X_test.columns
+    print(shap_values.shape)
+    print(shap_values[:,:,0])
+    shap.summary_plot(shap_values[:, :, 0], X_train)
+    shap.summary_plot(shap_values[:, :, 1], X_train)
