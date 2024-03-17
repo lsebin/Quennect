@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from sklearn.model_selection import KFold 
+import shap
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -63,7 +63,7 @@ def prepare_data(args=get_args()):
     features = q_cleaned.drop(['ia_status_Withdrawn'], axis = 1)
     target = q_cleaned_old['ia_status_Withdrawn']
 
-    seed = args.seed
+    seed = 42
 
     rus = RandomUnderSampler(random_state=seed)
     X_rus, y_rus= rus.fit_resample(features, target)
@@ -72,14 +72,63 @@ def prepare_data(args=get_args()):
                                                             random_state = seed)
     return X_train, X_test, y_train, y_test
 
-hyperparams = {
-    'lr': [1e-3, 1e-4],
-    'hidden': [128, 256],
-    'batch_size': [100, 200]
-}
+def train(dataloader, model, loss_fn, optimizer, device):
+    size = len(dataloader.dataset)
+    num_batches = len(dataloader)
+    correct , train_loss = 0, 0
+    model.train()
+    for batch, (X, y) in enumerate(dataloader):
+        X, y = X.to(device).to(torch.float32), y.to(device)
+        y = y.squeeze()
+        pred = model(X)
+        # print(pred, y)
+        # print(pred.dtype, y.dtype)
+        loss = loss_fn(pred, y)
+        _, lbls = torch.max(pred.data, 1)
+        correct += (lbls == y).type(torch.float).sum().item() 
+        # print(pred, y)
+        
+        # Backpropagation
+        optimizer.zero_grad()
+        loss.backward() 
+        optimizer.step()
+        train_loss += (loss.item())
 
-def run(args=get_args()):
-    # print(args.hidden, args.hidden1, args.hidden2)
+    train_loss /= num_batches 
+    correct /= size 
+    print(f"Train: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {train_loss:>8f} \n")
+    return correct, train_loss
+
+def test(dataloader, model, loss_fn, device):
+    size = len(dataloader.dataset)
+    num_batches = len(dataloader)
+    test_loss, correct = 0, 0
+    model.eval() # parameters no update
+    with torch.no_grad(): # disable gradient calculation
+        for X, y in dataloader:
+            X, y = X.to(device).to(torch.float32), y.to(device)
+            y = y.squeeze()
+            pred = model(X)
+            # print(outputs,pred, y)
+
+            _, lbls = torch.max(pred.data, 1)
+            correct += (lbls == y).type(torch.float).sum().item() 
+            loss = loss_fn(pred, y)
+            test_loss += loss.item() 
+    test_loss /= num_batches      
+    correct /= size # the overall accuracy 
+    print(f"Test: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    return correct, test_loss
+
+
+if __name__ == "__main__":
+
+    args=get_args()
+    
+    epochs = 5 #args.epoch
+    
+    # filepath = os.path.join("model", f"epoch{epochs}.pt")
+    # the_model = torch.load(filepath)
     # exit()
     
     X_train, X_test, y_train, y_test = prepare_data()
@@ -99,6 +148,7 @@ def run(args=get_args()):
         print(f"Shape of y: {y.shape} {y.dtype}")
         input_dim =list(X.size())[2]
         break
+    print("input_dim", input_dim)
 
     device = "cpu"
     if torch.cuda.is_available():
@@ -121,7 +171,6 @@ def run(args=get_args()):
                 nn.Linear(input_dim, int(args.hidden)), # apply linear transformation to the incoming data : y = x*W^T+b
                                         # weight here will be size of output * input
                 nn.ReLU(),  # rectified linear unit function: 0 for values < 0 and linear function if > 0
-                nn.Dropout(p=0.5), #add dropout to avoid overfitting
                 nn.Linear(int(args.hidden), int(args.hidden1)),
                 nn.ReLU(),
                 nn.Linear(args.hidden1, args.hidden2),
@@ -170,42 +219,20 @@ def run(args=get_args()):
         test_loss_list.append(test_loss) 
     print("Done!")
     
-    filepath = os.path.join("model", f"epoch{epochs}.pt")
-    torch.save(model, filepath)
-    print("Saved!")
+    def model_wrapper(x):
+        model.eval()
+        with torch.no_grad():
+            x_tensor = torch.FloatTensor(x).to(device)
+            predictions = model(x_tensor)
+            return(predictions.cpu().to_numpy())
     
-    exit()
+    shap.initjs()        
+    background_data =  X_train.to_numpy()
+    background_data_tensor = torch.FloatTensor(background_data).to(device)  # Convert background data to tensor
+    explainer = shap.GradientExplainer(model, background_data_tensor)
+    test_data_numpy = X_test.to_numpy()
+    test_data_tensor = torch.tensor(test_data_numpy, dtype=torch.float).to(device)
+    shap_values = explainer.shap_values(test_data_tensor)
     
-    filepath = os.path.join("fig", "supervised")
-    if not os.path.exists(filepath):
-        os.makedirs(filepath)
-    
-    
-    fig, ax = plt.subplots(figsize=(10,5))
-    x = range(epochs)
-    plt.plot(x, train_acc_list, label = "Train Accuracy")
-    plt.plot(x, test_acc_list, label = "Test Accuracy")
-    fig.suptitle('Accuracy vs Epochs', fontsize=20)
-    plt.xlabel("Epoch number")
-    plt.ylabel("Accuracy")
-    plt.legend()
-    #plt.savefig("acc.png")
-    plt.savefig(os.path.join(filepath, f"acc_{epochs}.png"))
-    
-    fig, ax = plt.subplots(figsize=(10,5))
-    fig.suptitle('Loss vs Epochs', fontsize=20)
-    x = range(epochs)
-    plt.plot(x, train_loss_list, label = "Train Loss")
-    plt.plot(x, test_loss_list, label = "Test Loss")
-    plt.xlabel("Epoch number")
-    plt.ylabel("Loss")
-    plt.legend()
-    plt.savefig(os.path.join(filepath, f"loss_{epochs}.png"))
-    
-    print("Saved!")
-    
-    # filepath = os.path.join("model", "epoch5.pth")
-    # the_model = torch.load(filepath)
-    
-    # print(the_model)
-    # torch.load()
+    shap.summary_plot(shap_values, test_data_numpy, feature_names=X_train.columns)
+    shap.force_plot(shap_values[0][0], test_data_numpy[0], feature_names=X_train.columns)
