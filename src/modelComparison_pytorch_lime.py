@@ -50,6 +50,8 @@ def prepare_data(args=get_args()):
     for col in list(q_cleaned_old.columns):
         if q_cleaned_old[col].max() < 1:
             exempt.append(col)
+        if 'util' in col:
+            exempt.append(col)
     q_cleaned_old.drop(columns = exempt, inplace=True)
     
     # Use batch normalization here - subtract by mean of data + divide by variance
@@ -217,7 +219,7 @@ if __name__ == "__main__":
         test_loss_list.append(test_loss) 
     print("Done!")
     
-    filepath = os.path.join("model", f"epoch{epochs}_lime.pt")
+    filepath = os.path.join("model", f"epoch{epochs}_lime_woutil.pt")
     torch.save(model, filepath)
     print("Saved!")
     
