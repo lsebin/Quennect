@@ -78,7 +78,56 @@ hyperparams = {
     'batch_size': [100, 200]
 }
 
-def run(args=get_args()):
+def train(dataloader, model, loss_fn, optimizer, device):
+    size = len(dataloader.dataset)
+    num_batches = len(dataloader)
+    correct , train_loss = 0, 0
+    model.train()
+    for batch, (X, y) in enumerate(dataloader):
+        X, y = X.to(device).to(torch.float32), y.to(device)
+        y = y.squeeze()
+        pred = model(X)
+        # print(pred, y)
+        # print(pred.dtype, y.dtype)
+        loss = loss_fn(pred, y)
+        _, lbls = torch.max(pred.data, 1)
+        correct += (lbls == y).type(torch.float).sum().item() 
+        # print(pred, y)
+        
+        # Backpropagation
+        optimizer.zero_grad()
+        loss.backward() 
+        optimizer.step()
+        train_loss += (loss.item())
+
+    train_loss /= num_batches 
+    correct /= size 
+    print(f"Train: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {train_loss:>8f} \n")
+    return correct, train_loss
+
+def test(dataloader, model, loss_fn, device):
+    size = len(dataloader.dataset)
+    num_batches = len(dataloader)
+    test_loss, correct = 0, 0
+    model.eval() # parameters no update
+    with torch.no_grad(): # disable gradient calculation
+        for X, y in dataloader:
+            X, y = X.to(device).to(torch.float32), y.to(device)
+            y = y.squeeze()
+            pred = model(X)
+            # print(outputs,pred, y)
+
+            _, lbls = torch.max(pred.data, 1)
+            correct += (lbls == y).type(torch.float).sum().item() 
+            loss = loss_fn(pred, y)
+            test_loss += loss.item() 
+    test_loss /= num_batches      
+    correct /= size # the overall accuracy 
+    print(f"Test: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    return correct, test_loss
+
+if __name__ == "__main__":
+    args=get_args()
     # print(args.hidden, args.hidden1, args.hidden2)
     # exit()
     
@@ -203,9 +252,3 @@ def run(args=get_args()):
     plt.savefig(os.path.join(filepath, f"loss_{epochs}.png"))
     
     print("Saved!")
-    
-    # filepath = os.path.join("model", "epoch5.pth")
-    # the_model = torch.load(filepath)
-    
-    # print(the_model)
-    # torch.load()

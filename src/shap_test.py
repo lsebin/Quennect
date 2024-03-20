@@ -234,7 +234,8 @@ if __name__ == "__main__":
     test_data_tensor = torch.tensor(test_data_numpy, dtype=torch.float).to(device)
     shap_values = explainer.shap_values(background_data_tensor)
     feature_names = X_test.columns
-    print(shap_values.shape)
-    print(shap_values[:,:,0])
-    shap.summary_plot(shap_values[:, :, 0], X_train)
-    shap.summary_plot(shap_values[:, :, 1], X_train)
+    # print(shap_values.shape)
+    # print(shap_values[:,:,0])
+    # shap.summary_plot(shap_values[:, :, 0], X_train)
+    # shap.summary_plot(shap_values[:, :, 1], X_train)
+    print(shap_values)
