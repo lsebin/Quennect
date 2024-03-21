@@ -1,7 +1,9 @@
 import { React, useState, useEffect } from "react";
 import "./HomePage.css";
 import Openai from '../components/Openai';
+
 import GridImg from '/Images/grid.jpg';
+
 
 function HomePage(props) {
   const handleSubmit = (event) => {
@@ -49,9 +51,9 @@ function HomePage(props) {
     <div id="home-page" className="container-fluid"> {/* Header */}
       <div className="row justify-content-center mb-4">
         <div className="col-md-8 text-center">
-          <h2 className="mb-3">A Commitment to Innovation and Sustainability</h2> 
-          <p>Quennect aims to remove the speculation from the development process by arming renewable project developers with the ability to set themselves up for success.</p> 
-          <img src={GridImg} alt="A commitment to innovation and sustainability" className="img-fluid mb-3" /> 
+          <h2 className="mb-3">A Commitment to Innovation and Sustainability</h2>
+          <p>Quennect aims to remove the speculation from the development process by arming renewable project developers with the ability to set themselves up for success.</p>
+          <img src={GridImg} alt="A commitment to innovation and sustainability" className="img-fluid mb-3" />
         </div>
       </div>
       <div className="row justify-content-center mb-4"> {/* Approach */}
@@ -61,8 +63,8 @@ function HomePage(props) {
         </div>
       </div>
       <div className="row justify-content-center mb-4"> {/* Methodology */}
-        <div className="col-md-4 text-center mb-3"> 
-          <h3>Advanced Data Analytics</h3> 
+        <div className="col-md-4 text-center mb-3">
+          <h3>Advanced Data Analytics</h3>
           <p>Transform complex datasets into strategic assets, optimize operations, and forecast trends with precision.</p>
         </div>
         <div className="col-md-4 text-center mb-3">
@@ -76,7 +78,7 @@ function HomePage(props) {
       </div>
       <div className="row justify-content-center">
         <div className="col text-center">
-          <Openai /> 
+          <Openai />
         </div>
       </div>
       
