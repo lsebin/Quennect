@@ -1,9 +1,9 @@
 import { React, useState, useEffect } from "react";
-import Alina from '/Users/alinaho/Quennect/web-app/src/Images/Alina.png';
-import Soyoon from '/Users/alinaho/Quennect/web-app/src/Images/Soyoon.png';
-import Caroline from '/Users/alinaho/Quennect/web-app/src/Images/Caroline.png'
-import Shane from '/Users/alinaho/Quennect/web-app/src/Images/Shane.png'
-import Sebin from '/Users/alinaho/Quennect/web-app/src/Images/Sebin.png'
+import Alina from '/Images/Alina.png';
+import Soyoon from '/Images/Soyoon.png';
+import Caroline from '/Images/Caroline.png'
+import Shane from '/Images/Shane.png'
+import Sebin from '/Images/Sebin.png'
 //import PropTypes from "prop-types";
 //import { displayRecent, displayUrgent } from "../api/home";
 import "./AboutPage.css";
