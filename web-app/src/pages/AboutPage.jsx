@@ -1,10 +1,10 @@
 import { React, useState, useEffect } from "react";
 
-import Alina from '/Images/Alina.png';
-import Soyoon from '/Images/Soyoon.png';
-import Caroline from '/Images/Caroline.png'
-import Shane from '/Images/Shane.png'
-import Sebin from '/Images/Sebin.png'
+import Alina from '../Images/Alina.png';
+import Soyoon from '../Images/Soyoon.png';
+import Caroline from '../Images/Caroline.png'
+import Shane from '../Images/Shane.png'
+import Sebin from '../Images/Sebin.png'
 
 //import PropTypes from "prop-types";
 //import { displayRecent, displayUrgent } from "../api/home";
@@ -20,7 +20,7 @@ function AboutPage(props) {
   const [recentResults, setRecentResults] = useState([]);
   const [urgentResults, setUrgentResults] = useState([]);
   const [pageRecent, setPageRecent] = useState(1);
-  const [pageUrgent, setPageUrgent] = useState(1);
+  const [pageUrgent, setPageUrgent] = useState(1
   const [numRecentResults, setNumRecentResults] = useState(0);
   const [numUrgentResults, setNumUrgentResults] = useState(0);
 

@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import "./HomePage.css";
 import Openai from '../components/Openai';
 
-import GridImg from '/Images/grid.jpg';
+import GridImg from '../Images/grid.jpg';
 
 
 function HomePage(props) {
