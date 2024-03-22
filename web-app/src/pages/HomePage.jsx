@@ -4,11 +4,69 @@ import Openai from '../components/Openai';
 
 import GridImg from '../Images/grid.jpg';
 
+import Img0 from '../Images/test_0.png';
+import Img1 from '../Images/test_1.png';
+
 
 function HomePage(props) {
+
+  const [utility, setUtility] = useState('');
+  const [region, setRegion] = useState('');
+  const [energy, setEnergy] = useState('');
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [year, setYear] = useState(0);
+  const [date, setDate] = useState(''); // YYYY-MM-DD
+
+  const [show, setShow] = useState(0);
+  const [count, setCount] = useState(0);
+
+  const [responseText, setResponseText] = useState('');
+
+
+  const handleUtilityChange = (e) => {
+    setUtility(e.target.value);
+  };
+
+  const handleRegionChange = (e) => {
+    setRegion(e.target.value);
+  };
+
+  const handleEnergyChange = (e) => {
+    setEnergy(e.target.value);
+  };
+
+  const handleLatitudeChange = (e) => {
+    setLatitude(e.target.value);
+  };
+
+  const handleLongitudeChange = (e) => {
+    setLongitude(e.target.value);
+  };
+
+  const handleYearChange = (e) => {
+    setYear(e.target.value);
+  };
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+  
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Logic to handle form submission, such as collecting form data
+    
+    setUtility(document.getElementById('utilityTypeSelect').value);
+    setRegion(document.getElementById('regionType').value);
+    setEnergy(document.getElementById('energyType').value);
+    /// TODO: Logic to handle form submission, such as collecting form data
+    setShow(1);
+    setCount(count+1);
+    
+    if (count % 2 == 0) {
+      setResponseText("Our model predicts that this project is unlikely to be withdrawn, with a 53% chance of no withdrawal. The three leading factors for this project, based on all of the parameters included, that have most influenced the prediction probability towards withdrawal are that the project is not located in the Southeast or Western regions of the United States, and that it is not a biomass project. Given the project parameters, it may be worthwhile to explore these options. According to our model, it is unlikely to face withdrawal because it is not one of the following types of energy: gravity rail, hybrid, hydroelectric, or offshore wind.");
+    } else {
+      setResponseText("Our model predicts that this project is likely to be withdrawn, with a 73% chance of withdrawal. The overwhelming factor in this decision is the region that it is built in (the Southeast of the United States), with an influencing value of 5.61 in our model, compared to 0.02 and 0.06 in the nearest factors. A project in the West of the United States may have fared better, as that was a leading feature that suggested that the project might not be withdrawn.");
+    }
   };
 
   const utilityTypes = [
@@ -88,7 +146,7 @@ function HomePage(props) {
           <form onSubmit={handleSubmit} className="mt-5">
             <div className="form-group">
               <label htmlFor="utilityTypeSelect">Utility Type</label>
-              <select id="utilityTypeSelect" name="utilityType" className="form-control">
+              <select id="utilityTypeSelect" name="utilityType" className="form-control" onChange={handleUtilityChange}>
                 {utilityTypes.map((type, index) => (
                   <option key={index} value={type}>{capitalize(type)}</option>
                 ))}
@@ -96,7 +154,7 @@ function HomePage(props) {
             </div>
             <div className="form-group">
               <label htmlFor="regionType">Region Type</label>
-              <select className="form-control" id="regionType">
+              <select className="form-control" id="regionType" onChange={handleRegionChange}>
                 <option>CAISO</option>
                 <option>MISO</option>
                 <option>PJM</option>
@@ -106,7 +164,7 @@ function HomePage(props) {
             </div>
             <div className="form-group">
               <label htmlFor="energyType">Energy Type</label>
-              <select className="form-control" id="energyType">
+              <select className="form-control" id="energyType" onChange={handleEnergyChange}>
                 <option value="Battery">Battery</option>
                 <option value="Biofuel">Biofuel</option>
                 <option value="Biogas">Biogas</option>
@@ -132,26 +190,75 @@ function HomePage(props) {
             </div>
             <div className="form-group">
               <label htmlFor="latitude">Latitude</label>
-              <input type="number" className="form-control" id="latitude" placeholder="Enter latitude" />
+              <input type="number" className="form-control" id="latitude" placeholder="Enter latitude" onChange={handleLatitudeChange}/>
             </div>
             <div className="form-group">
               <label htmlFor="longitude">Longitude</label>
-              <input type="number" className="form-control" id="longitude" placeholder="Enter longitude" />
+              <input type="number" className="form-control" id="longitude" placeholder="Enter longitude" onChange={handleLongitudeChange}/>
             </div>
             <div className="form-group">
               <label htmlFor="year">Year</label>
-              <input type="number" className="form-control" id="year" placeholder="Enter year" />
+              <input type="number" className="form-control" id="year" placeholder="Enter year" onChange={handleYearChange}/>
             </div>
             <div className="form-group">
               <label htmlFor="date">Date</label>
-              <input type="date" className="form-control" id="date" />
+              <input type="date" className="form-control" id="date" onChange={handleDateChange}/>
             </div>
             <button type="submit" className="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>
+  <div>
+  {show ? (
+  <div className="container-fluid">
+    <div className="row justify-content-center">
+      <div className="col-12">
+        <b>Response:</b>
+      </div>
+
     </div>
-  );
+    <div className="row justify-content-center">
+      <div className="col-10">
+        <p><b>Utility:</b> {utility}</p>
+        <p><b>Region:</b> {region}</p>
+        <p><b>Energy:</b> {energy}</p>
+        <p><b>Latitude:</b> {latitude}</p>
+        <p><b>Longitude:</b> {longitude}</p>
+        <p><b>Year:</b> {year}</p>
+        <p><b>Date:</b> {date}</p>
+      
+        {responseText}
+      </div>
+    </div>
+  </div>) : ""
+}
+</div>
+
+<div>
+{(show && (count%2 == 0)) ? (
+  <div className="container-fluid">
+    <div className="row justify-content-center">
+      <div className="col-12">
+      <img src={Img0} alt="Image 0" className="img-fluid" />
+      </div>
+      </div>
+  </div>) : ''
+}
+</div>
+
+<div>
+{(show && (count%2 == 1)) ? (
+  <div className="container-fluid">
+    <div className="row justify-content-center">
+      <div className="col-12">
+      <img src={Img1} alt="Image 1" className="img-fluid" />
+      </div>
+      </div>
+  </div>) : ''
+}
+</div>
+    </div>
+);
 }
 
 export default HomePage;
