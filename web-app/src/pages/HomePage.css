@@ -1,17 +1,72 @@
 #home-page {
-  /* for testing purposes... when implementing, please remove height: 200vh */
-  height: 100vh;
-  /*font-family: Arial, sans-serif;*/
-  /*font-size: 15px;*/
-  /*hi*/
+  height: auto; 
+  min-height: 100vh; /* Ensures at least full viewport height */
+  padding-bottom: 50px; /* Space at bottom */
 }
 
+#home-page h2:first-of-type {
+  margin-top: 20px; /* Only if h2 is directly accessible and the first item */
+}
+
+.top-bar {
+  margin-top: 20px;
+  background-color: #004d40; /* Dark natural green */
+  height: 50px; /* Adjust based on your preference */
+  width: 100%; /* Ensures it stretches across the screen */
+}
 .content-box {
-  background-color: antiquewhite;
-  height: 60%;
-  margin-bottom: 1%;
+  background-color: antiquewhite; 
+  padding: 20px; /* Added padding for internal spacing */
+  margin-bottom: 20px; /* Consistent spacing at the bottom */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: Adds depth */
 }
 
 .items {
-  margin: 1rem 17rem 1rem 17rem;
+  margin: 1rem auto; /* Centered with auto margins */
+  max-width: 80%; /* Limit width to enhance readability */
+  padding: 0 20px; /* Padding for small screens */
+}
+
+/* Additional Styling for Form Elements */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Creates consistent spacing between form fields */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="number"],
+input[type="date"],
+select {
+  padding: 10px; /* Increased padding for better interaction */
+  border: 1px solid #ccc; /* Subtle border */
+  border-radius: 5px; /* Rounded corners */
+}
+
+button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #004d40; /* Bootstrap primary color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #004d40; /* Darker shade on hover */
+}
+
+.subsection-box {
+  padding: 20px;
+  margin: 10px auto; /* Adds vertical space and auto margins for centering */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  max-width: 90%; /* Prevents boxes from reaching the edge */
 }

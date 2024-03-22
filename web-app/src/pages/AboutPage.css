@@ -17,7 +17,7 @@
   width: 100%; /* Adjusts image width to fit the container */
   height: auto; /* Maintains the aspect ratio */
   max-width: 200px; /* Maximum width; adjust as needed */
-  max-height: 350px; /* Maximum height; adjust as needed */
+  max-height: 450px; /* Maximum height; adjust as needed */
   object-fit: cover; /* Ensures the image covers the area, might crop */
   border-radius: 15px; /* Slightly rounded corners */
 }
