@@ -41,18 +41,85 @@ class Q_vecDataset(torch.utils.data.Dataset):
         return X, y
 
 def prepare_data(args=get_args()):
-    q_cleaned_old = pd.read_csv('data/data_vectorized_240228.csv')
+    os.chdir('../data')
+    q_cleaned_old = pd.read_csv('mid_cleaning_240228.csv')
     q_cleaned_old.drop(['ia_status_Facility Study', 'ia_status_Feasibility Study',
         'ia_status_IA Executed', 'ia_status_Operational',
         'ia_status_System Impact Study', 'Unnamed: 0'], axis = 1, inplace=True)
+    
+    deregulated_electricity_markets = ['OR', 'CA', 'TX', 'IL', 'MI', 'OH', 'VA', 'MD', 'DE', 'PA', 'NJ', 'NY', 'MA', 'CT', 'RI', 'NH', 'ME']
+    q_cleaned_old['is_deregulated'] = q_cleaned_old['state'].isin(deregulated_electricity_markets).astype(int)
+    
+    has_100_percent_clean_energy_goal = ['CA', 'CO', 'CT', 'DE', 'HI', 'IL', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'NE', 'NV', 'NJ', 'NM', 'NY', 'NC', 'OR', 'RI', 'VA', 'WA', 'WI']
+    q_cleaned_old['has_100_clean_energy_goal'] = q_cleaned_old['state'].isin(has_100_percent_clean_energy_goal).astype(int)
+    
+    top_ten_renewable_generators = ['TX', 'FL', 'PA', 'CA', 'IL', 'AL', 'OH', 'NC', 'GA', 'NY']
+    q_cleaned_old['top_ten_renewable_generators'] = q_cleaned_old['state'].isin(top_ten_renewable_generators).astype(int)
+    
+    q_cleaned_old['is_solar'] = (q_cleaned_old['type1_Solar'] == 1).astype(int)
+    
+    q_cleaned_old['is_storage'] = ((q_cleaned_old['type1_Battery'] == 1) |
+                                    (q_cleaned_old['type1_Hydro'] == 1) |
+                                    (q_cleaned_old['type1_Gravity Rail'] == 1) |
+                                    (q_cleaned_old['type1_Flywheel'] == 1) |
+                                    (q_cleaned_old['type1_Pumped Storage'] == 1)).astype(int)
+    
+    q_cleaned_old['is_wind'] = ((q_cleaned_old['type1_Offshore Wind'] == 1) |
+                                (q_cleaned_old['type1_Wind'] == 1)).astype(int)
 
+    q_cleaned_old['is_bioenergy'] = ((q_cleaned_old['type1_Biofuel'] == 1) |
+                                    (q_cleaned_old['type1_Biogas'] == 1) |
+                                    (q_cleaned_old['type1_Biomass'] == 1) |
+                                    (q_cleaned_old['type1_Wood'] == 1)).astype(int)
+
+    q_cleaned_old['is_wasteuse'] = ((q_cleaned_old['type1_Landfill'] == 1) |
+                                    (q_cleaned_old['type1_Methane'] == 1) |
+                                    (q_cleaned_old['type1_Waste Heat'] == 1)).astype(int)
+
+    q_cleaned_old['is_cleanenergy'] = ((q_cleaned_old['type1_Geothermal'] == 1) |
+                                    (q_cleaned_old['type1_Nuclear'] == 1) |
+                                    (q_cleaned_old['type1_Solar'] == 1) |
+                                    (q_cleaned_old['type1_Offshore Wind'] == 1) |
+                                    (q_cleaned_old['type1_Hydro'] == 1) |
+                                    (q_cleaned_old['type1_Wind'] == 1)).astype(int)
+
+    q_cleaned_old['is_fossilfuels'] = ((q_cleaned_old['type1_Coal'] == 1) |
+                                    (q_cleaned_old['type1_Diesel'] == 1) |
+                                    (q_cleaned_old['type1_Gas'] == 1) |
+                                    (q_cleaned_old['type1_Oil'] == 1) |
+                                    (q_cleaned_old['type1_Steam'] == 1)).astype(int)
+
+    q_cleaned_old['is_hybrid'] = (q_cleaned_old['type1_Hybrid'] == 1).astype(int)
+    
+    high_revenue_utilities = ['SOCO', 'Duke Energy Indiana, LLC', 'Duke_FL','Duke Energy Corporation',
+                              'Duke Energy', 'Duke', 'PGE', 'AEP', 'DominionSC', 'Dominion SC', 'Dominion']
+    
+    q_cleaned_old['high_revenue_utility'] = q_cleaned_old['utility'].isin(high_revenue_utilities).astype(int)
+    
+    q_cleaned_old.drop(['q_date', 'state', 'entity', 'utility', 'county_1'], axis = 1, inplace=True)
+    q_cleaned_old.drop(['Join_Count','Join_Count_1','Join_Count_12','TARGET_FID_12','Join_Count_12_13','TARGET_FID_12_13'], axis = 1, inplace=True)
+    q_cleaned_old.drop(['name', 'power', 'substation', 'type', 'LEGAL_NAME', 'tokens.1'], axis = 1, inplace=True)
+    
     exempt = []
     for col in list(q_cleaned_old.columns):
         if q_cleaned_old[col].max() < 1:
             exempt.append(col)
-        if 'util' in col:
+        if 'type1' in col:
             exempt.append(col)
     q_cleaned_old.drop(columns = exempt, inplace=True)
+    
+    q_cleaned_old.rename(columns={'q_year': 'year_entering_queue', 
+                   'prop_year': 'proposed_year',
+                   'total_mw': 'project_size_mw',
+                   'Lat': 'project_latitude',
+                   'Long': 'project_longitude',
+                   'POP_SQMI': 'population_density',
+                   'votes_per_sqkm': 'voting_density',
+                   'solar_ann_ghi_rn': 'solar_potential',
+                   'avg_wind_speed_meters_per_second': 'wind_potential'}, inplace=True)
+    
+    print(q_cleaned_old.info())
+    print(q_cleaned_old.describe())
     
     # Use batch normalization here - subtract by mean of data + divide by variance
     scaler = StandardScaler()
@@ -219,7 +286,11 @@ if __name__ == "__main__":
         test_loss_list.append(test_loss) 
     print("Done!")
     
-    filepath = os.path.join("model", f"epoch{epochs}_lime_woutil.pt")
+    directory = "model"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    
+    filepath = os.path.join(directory, f"epoch{epochs}_lime_woutil.pt")
     torch.save(model, filepath)
     print("Saved!")
     
