@@ -28,6 +28,7 @@ feature_names = ['year_entering_queue', 'proposed_year', 'region_CAISO', 'region
 
 explainer = lime.lime_tabular.LimeTabularExplainer(X_train, feature_names=feature_names, class_names=classes, discretize_continuous=True)
 
+# Model Architecture
 class NeuralNetwork(nn.Module):
         def __init__(self):
             super().__init__()
@@ -46,7 +47,8 @@ class NeuralNetwork(nn.Module):
         def forward(self, x): 
             x = self.linear_relu_stack(x)
             return x # changed to squeeze
-        
+ 
+# Load the model       
 filepath = "" #os.path.join("data", "model", "epoch5_lime_woutil.pt")
 the_model = NeuralNetwork()
 the_model = torch.load(filepath)
@@ -69,6 +71,7 @@ def model_forward_numpy(x_numpy):
 
 X_test = ""
 
+# This runs lime
 exp = explainer.explain_instance(X_test, model_forward_numpy, num_features=29, top_labels=1, num_samples=1000)
 
 pred = exp.predict_proba
