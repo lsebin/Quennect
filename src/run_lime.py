@@ -1,14 +1,9 @@
-import sklearn.ensemble
 import numpy as np
 import lime
 import lime.lime_tabular
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 import torch
 from torch import nn
-from torch.utils.data import DataLoader 
 import joblib
 
 def run_lime(user_input):
@@ -62,9 +57,6 @@ def run_lime(user_input):
     the_model.load_state_dict(torch.load(filepath))
     the_model.eval()
 
-    scaler_filename = "standard_scaler.joblib"
-    scaler = joblib.load(scaler_filename) 
-
     # Define a function to convert input from NumPy arrays to PyTorch tensors
     def numpy_to_tensor(x):
         return torch.tensor(x, dtype=torch.float32)
@@ -81,9 +73,6 @@ def run_lime(user_input):
         output_numpy = tensor_to_numpy(output_tensor)
         return output_numpy
 
-    
-    user_input = np.array(user_input).reshape(1, 30)
-    user_input = scaler.transform(user_input)
     X_test = pd.Series((x for x in user_input[0]))
 
     # This runs lime
@@ -97,9 +86,20 @@ def run_lime(user_input):
     
     return pred[0], dic
 
+def scale_user_input(user_input):
+    scaler_filename = "standard_scaler.joblib"
+    scaler = joblib.load(scaler_filename)
+    user_input = np.array(user_input).reshape(1, 30)
+    scaled_input = scaler.transform(user_input)
+    
+    return scaled_input
+    
+
 if __name__ == "__main__":
     user_input = [1 for i in range(30)]
+    user_input = scale_user_input(user_input)
     features_weight, predict = run_lime(user_input)
     print(features_weight)
     print(predict)
     print(user_input)
+    

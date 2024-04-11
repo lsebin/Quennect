@@ -1,16 +1,10 @@
 import pandas as pd
-import argparse, os
 import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 import torch
 from torch import nn
-from torch.utils.data import DataLoader, Dataset
-from sklearn.model_selection import KFold
-from sklearn.utils.class_weight import compute_class_weight
-from sklearn.metrics import f1_score
 import shap
+import joblib
+from run_lime import scale_user_input
 
 BATCH_SIZE = 100
 LR = 0.001
@@ -60,20 +54,27 @@ def explain(point, X_train):
     train_tensor = torch.tensor(train_numpy, dtype = torch.float)
 
     explainer = shap.GradientExplainer(model, train_tensor)
-    shap_values = explainer.shap_values(ex_tensor) #[:,:,0]
-    print(len(shap_values))
+    
+    # try running the code and use [0] or [:,:,0] depending on what works for you
+    shap_values = explainer.shap_values(ex_tensor)[0] #[:,:,0]
+    
+    # for seeing summary_plot
     shap.summary_plot(shap_values, ex_tensor, feature_names = X_train.columns)
 
     shap_pd = pd.DataFrame(shap_values, columns = X_train.columns)
     top_ind = np.argsort(shap_pd.values.flatten())[-5:][::-1]
     top_features = shap_pd.columns[top_ind].to_numpy()
     top_shap = shap_pd.values.flatten()[top_ind]
-    return top_features, top_shap
+    dic = {top_features[i]:top_shap[i] for i in range(len(top_features))}
+    return dic
 
 if __name__ == "__main__":
     X_train = pd.read_csv('data/X_train.csv')
     X_train = X_train.drop('Unnamed: 0', axis=1)
-    user_input = X_train.iloc[0,:] #pd.Series((1 for i in range(30)))
-    top_neg_features, shap_vals = explain(user_input, X_train)
-    print(top_neg_features)
-    print(shap_vals)
+    
+    user_input = [1 for i in range(30)] #X_train.iloc[0,:] 
+    user_input = scale_user_input(user_input)
+    X_test = pd.Series((x for x in user_input[0]))
+    
+    top_5_features_rec = explain(X_test, X_train)
+    print(top_5_features_rec)
