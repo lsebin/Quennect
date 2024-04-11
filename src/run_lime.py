@@ -6,10 +6,7 @@ import torch
 from torch import nn
 import joblib
 
-def run_lime(user_input):
-    X_train = pd.read_csv('data/X_train.csv')
-    X_train = X_train.drop('Unnamed: 0', axis=1)
-    
+def run_lime(X_test, X_train):
     feature_names = X_train.columns
     classes = np.array(['Not Withdrawn', 'Withdrawn'])
     
@@ -73,7 +70,6 @@ def run_lime(user_input):
         output_numpy = tensor_to_numpy(output_tensor)
         return output_numpy
 
-    X_test = pd.Series((x for x in user_input[0]))
 
     # This runs lime
     exp = explainer.explain_instance(X_test, model_forward_numpy, num_features=30, top_labels=1, num_samples=1000)
@@ -98,7 +94,13 @@ def scale_user_input(user_input):
 if __name__ == "__main__":
     user_input = [1 for i in range(30)]
     user_input = scale_user_input(user_input)
-    features_weight, predict = run_lime(user_input)
+    
+    X_train = pd.read_csv('data/X_train.csv')
+    X_train = X_train.drop('Unnamed: 0', axis=1)
+    X_test = pd.Series((x for x in user_input[0]))
+    
+    predict, features_weight = run_lime(X_test, X_train)
+    
     print(features_weight)
     print(predict)
     print(user_input)
