@@ -2,7 +2,6 @@ import pandas as pd
 import argparse, os
 import numpy as np
 import matplotlib.pyplot as plt
-from imblearn.under_sampling import RandomUnderSampler
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import torch
@@ -53,6 +52,7 @@ def explain(point, X_train):
     model.eval()
 
     ex_point = point
+    
     ex_numpy = np.expand_dims(ex_point.to_numpy(), axis=0)
     ex_tensor = torch.tensor(ex_numpy, dtype = torch.float)
 
@@ -60,7 +60,8 @@ def explain(point, X_train):
     train_tensor = torch.tensor(train_numpy, dtype = torch.float)
 
     explainer = shap.GradientExplainer(model, train_tensor)
-    shap_values = explainer.shap_values(ex_tensor)[:,:,0]
+    shap_values = explainer.shap_values(ex_tensor) #[:,:,0]
+    print(len(shap_values))
     shap.summary_plot(shap_values, ex_tensor, feature_names = X_train.columns)
 
     shap_pd = pd.DataFrame(shap_values, columns = X_train.columns)
@@ -72,6 +73,7 @@ def explain(point, X_train):
 if __name__ == "__main__":
     X_train = pd.read_csv('data/X_train.csv')
     X_train = X_train.drop('Unnamed: 0', axis=1)
-    top_neg_features, shap_vals = explain(X_train.iloc[0,:], X_train)
+    user_input = X_train.iloc[0,:] #pd.Series((1 for i in range(30)))
+    top_neg_features, shap_vals = explain(user_input, X_train)
     print(top_neg_features)
     print(shap_vals)
