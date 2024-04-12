@@ -70,11 +70,11 @@ function HomePage(props) {
     try {
       const response = await sendModelData(utility, region, size, energy, state, county, year);
       const data = response.data
-      {/*rec = data.recommendation;
-      features = data.features;*/}
+      console.log(data)
       console.log('Response from backend:', response);
       //setResponseText(data.analysis);
       //setResponseText(data.debug);
+      console.log(data.txt);
       setResponseText(data.txt);
 
       // Handle response as needed

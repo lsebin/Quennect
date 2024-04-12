@@ -66,7 +66,7 @@ def model():
     from_user[9] = longitude
     
     #TODO: fix population density
-    from_user[10] = votes_per_sqkm * 0.386102
+    from_user[10] = votes_per_sqkm
     
     from_user[11] = votes_dem
     from_user[12] = votes_rep
@@ -167,7 +167,7 @@ def model():
     top_5_features_rec = run_shap(X_test, X_train)
     # print(top_5_features_rec)
     
-    predict, features_weight = run_lime(X_test, X_train)
+    predict, features_weight, feature_names = run_lime(X_test, X_train)
     rec = None
     
     #TODO: connecting with openai api
@@ -196,7 +196,7 @@ def model():
     debug = ', '.join(map(str, from_user))
     
     txt = get_analysis(formatted_json)
-    
+    print(txt)
     #return jsonify({'txt': txt, 'debug': debug})
     return jsonify({'txt': txt})
     
