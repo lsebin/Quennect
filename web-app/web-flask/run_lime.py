@@ -80,7 +80,7 @@ def run_lime(X_test, X_train):
     res = li[k][:10]
     dic = {feature_names[x]: y for (x,y) in res}
     
-    return pred[0], dic
+    return pred[0], dic, feature_names
 
 def scale_user_input(user_input):
     scaler_filename = "standard_scaler.joblib"

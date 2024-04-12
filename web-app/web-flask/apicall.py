@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 
 def get_analysis(input_data):
-  os.environ['OPENAI_API_KEY'] = "input your openai api key"
+  os.environ['OPENAI_API_KEY'] = "input your api key"
   
   client = OpenAI()
   try:
