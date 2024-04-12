@@ -175,12 +175,14 @@ def model():
         rec = top_5_features_rec
     
     explanation_str = ',\n '.join([f"'{key}': {value}" for key, value in Explanation.items()])
-    output_str = f"Prediction: {Prediction}\nExplanation: {{\n{explanation_str}\n}}"
+    output_str = f"Prediction: {predict}\nExplanation: {{\n{explanation_str}\n}}"
+    
+    debug = ', '.join(map(str, from_user))
     
     analysis = get_analysis(output_str)
     
     #return jsonify({'recommedation': rec, 'features': features_weight})
-    return jsonify({'analysis': analysis})
+    return jsonify({'analysis': analysis, 'debug': debug})
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

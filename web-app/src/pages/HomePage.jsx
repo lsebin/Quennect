@@ -73,7 +73,8 @@ function HomePage(props) {
       {/*rec = data.recommendation;
       features = data.features;*/}
       console.log('Response from backend:', response);
-      setResponseText(data.analysis);
+      //setResponseText(data.analysis);
+      setResponseText(data.debug);
 
       // Handle response as needed
     } catch (error) {
