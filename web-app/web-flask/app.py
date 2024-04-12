@@ -4,11 +4,24 @@ import pandas as pd
 from flask import Flask, request, jsonify
 from run_model import run_shap
 from run_lime import run_lime, scale_user_input
+# from flaskext.mysql import MySQL
+# from flask_sqlalchemy import SQLAlchemy
+# from sqlalchemy.orm import DeclarativeBase
  
 app = Flask(__name__)
 
+
 @app.route('/api/model')
 def get_current_time():
+    # cur = mysql.get_db().cursor()
+    # cur.execute('SELECT * FROM states')
+    # data = cur.fetchall()
+    # cur.close()
+    
+    # print(data)
+    
+    data=None
+    
     from_user = [1 for _ in range(30)]
     
     X_train = pd.read_csv('X_train.csv')
@@ -28,7 +41,7 @@ def get_current_time():
     if predict < 0.8:
         rec = top_5_features_rec
     
-    return jsonify({'recommedation': rec, 'features': features_weight})
+    return jsonify({'recommedation': rec, 'features': features_weight, 'sql': data})
 
 if __name__ == "__main__":
     app.run(port=5000)
