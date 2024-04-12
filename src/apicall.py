@@ -1,0 +1,61 @@
+from openai import OpenAI
+import os
+
+
+def get_analysis(input_data):
+  os.environ['OPENAI_API_KEY'] = "input your openai api key"
+  
+  client = OpenAI()
+  try:
+    response = client.chat.completions.create(
+      model="gpt-4",
+      messages=[
+        {
+          "role": "system",
+          "content": "You are a helpful energy consultant. Using the given numerical dataset,  your role entails conducting a thorough analysis and providing detailed explanations regarding energy projects submitted to the interconnection queue \n\nThe dataset provided consists of numerical data. 'Prediction' indicates the likelihood of a project passing through the interconnection queue in decimal predicted by neural network model. 'Explanation' elucidates the extent of various factors' impact on the model when making the prediction.  Explanation data is presented in a dictionary format where each key corresponds to a factor influencing the project. A positive value suggests a positive effect on the prediction, while a negative value indicates a negative impact.  'Raw Data' is the raw data that we inputted to the nueral network model. Raw Data is presented in dictionary format.\n\nThe following is what each key in Explanation and Raw Data refers to:\nyear_entering_queue:\tyear project entered queue\nproposed_year: proposed online year from interconnection application\nregion_CAISO: binary status of proposed energy project being under California Independent System Operator(CAISO)\nregion_MISO: binary status of proposed energy project being under dispatched market in Midwest and South\nregion_PJM: binary status of proposed energy project being under market for Northeast states \nregion_Southeast (non-ISO): binary status of proposed energy project located in Southeast without being in ISO\nregion_West (non-ISO): binary status of proposed energy project located in West without being in ISO\nproject_size_mw: summed capacity (MW)\nproject_latitude: latitude \nproject_longitude: longitude\npopulation_density: population per square mile\ntop_ten_renewable_generators: whether the state is one of the top 10 in the US for renewable generation\nhigh_revenue_utility: whether the utility is one of the top 10 in the US for revenue\nis_deregulated:whether the project is in a state with a deregulated electricity market\nis_solar: binary status of proposed energy project being solar project\nis_storage: binary status of proposed energy project having energy storage\nis_wind: binary status of proposed energy project being wind project\nis_bioenergy: binary status of proposed energy project being bioenergy project\nis_wasteuse: binary status of proposed energy project being wasteuse project\nis_cleanenergy: binary status of proposed energy project being clean energy project\nis_fossilfuels: binary status of proposed energy project being fossil fuels project\nis_hybrid: binary status of proposed energy project being hybrid energy project\nsolar_potential: solar annual radiation for a project location\nwind_potential: average wind speed (m/s) for a project location\nvotes_dem: number of votes for Democrats in precinct\nvotes_rep: number of votes for Republicans in precinct\nvotes_total: total number of votes in the precinct\nvotes_per_sqkm: total number of votes per square kilometer of the district\npct_dem_lead: percentage of Democratic party lead in a precinct (can be negative)\n\nIf the energy project is in ISO(Independent System Operator), the project has access to federal grid system but will have more regulation to comply with. If the project is non-ISO, while the regulation is more lenient, it has relatively less systemtic support and flexibility to adapt renewable energy projects. \n\nWrite me a one-paragraph analysis explaining the rationale behind the prediction outcomes utilizing the given data."
+        },
+        {
+          "role": "user",
+          "content": "Prediction: 0.50476456\nExplanation: {\n'region_Southeast (non-ISO)': 0.28889288950203823,\n 'region_West (non-ISO)': 0.15170366516729664,\n 'is_bioenergy': -0.09541453528371192,\n 'is_wasteuse': -0.09360595313293518,\n 'is_hybrid': -0.07188510398505436,\n 'high_revenue_utility': 0.06390519084753583,\n 'region_MISO': -0.06245367361967621,\n 'region_CAISO': -0.05853137232631501,\n 'year_entering_queue': 0.040840818216067304,\n 'is_wind': -0.03163592481886624}\nRaw Data: {\n'year_entering_queue': 2010.0,\n 'proposed_year': 2011.0,\n 'region_CAISO': 0.0,\n 'region_MISO': 0.0,\n 'region_PJM': 1.0,\n 'region_Southeast (non-ISO)': 0.0,\n 'region_West (non-ISO)': 0.0,\n 'project_size_mw': 5.0,\n 'project_latitude': 39.57196067,\n 'population_density': 1236.6,\n 'votes_dem': 533.0,\n 'votes_rep': 1463.0,\n 'votes_total': 2024.0,\n 'voting_density': 19.3,\n 'pct_dem_lead': -45.9,\n 'solar_potential': 4.1,\n 'wind_potential': 3.3134143,\n 'is_deregulated': 1.0,\n 'has_100_clean_energy_goal': 1.0,\n 'top_ten_renewable_generators': 0.0,\n 'is_solar': 1.0,\n 'is_storage': 0.0,\n 'is_wind': 0.0,\n 'is_bioenergy': 0.0,\n 'is_wasteuse': 0.0,\n 'is_cleanenergy': 1.0,\n 'is_fossilfuels': 0.0,\n 'is_hybrid': 0.0,\n 'high_revenue_utility': 0.0}\n"
+        },
+        {
+          "role": "assistant",
+          "content": "According to the input data, this is solar project located in the PJM region with below average megawatt capacity. Our model predicts that this project is equally likely to be withdrawn or not withdrawn. The three leading factors contributing to the likelihood of withdrawal are that the project is not located in the non-ISO Southeast and West regions, and that the project is not affiliated with a high-revenue utility. The three leading factors contributing to its likelihood of not getting withdrawn are that it is not in the MISO region, nor is it a waste use or bioenergy project. We suggest that the developer consider sourcing solar in different regions, or that they direct their attention to securing offtake from a high revenue utility in the PJM region."
+        },
+        {
+          "role": "user",
+          "content": "Prediction: 0.09564564\nExplanation: {\n'region_Southeast (non-ISO)': 0.28680992369642483,\n 'region_West (non-ISO)': -0.14214409951841653,\n 'is_bioenergy': 0.10932988198841712,\n 'is_hybrid': 0.09119921506751229,\n 'high_revenue_utility': 0.07981144720074954,\n 'is_wasteuse': 0.07521489014843445,\n 'region_MISO': 0.05928706141408794,\n 'region_CAISO': 0.054773399446794775,\n 'year_entering_queue': 0.037841868847637045,\n 'is_wind': 0.030782450323231868 }\nRaw Data: {\n'year_entering_queue': 2020.0,\n 'proposed_year': 2021.0,\n 'region_CAISO': 0.0,\n 'region_MISO': 0.0,\n 'region_PJM': 0.0,\n 'region_Southeast (non-ISO)': 1.0,\n 'region_West (non-ISO)': 0.0,\n 'project_size_mw': 10.0,\n 'project_latitude': 32.76522034,\n 'population_density': 166.1,\n 'votes_dem': 1245.0,\n 'votes_rep': 314.0,\n 'votes_total': 1569.0,\n 'voting_density': 4.7,\n 'pct_dem_lead': 59.3,\n 'solar_potential': 4.7,\n 'wind_potential': 3.0276191,\n 'is_deregulated': 0.0,\n 'has_100_clean_energy_goal': 0.0,\n 'top_ten_renewable_generators': 0.0,\n 'is_solar': 0.0,\n 'is_storage': 1.0,\n 'is_wind': 0.0,\n 'is_bioenergy': 0.0,\n 'is_wasteuse': 0.0,\n 'is_cleanenergy': 0.0,\n 'is_fossilfuels': 0.0,\n 'is_hybrid': 0.0,\n 'high_revenue_utility': 1.0}"
+        },
+        {
+          "role": "assistant",
+          "content": "According to the input data, this is a storage project located in the Southeast with below average megawatt capacity. Our model predicts that this project is very likely to be withdrawn, with a 90% likelihood. This is overwhelmingly due to it being located in the non-ISO Southeast region. To increase likelihood of approval, it may also be worthwhile to explore other forms of energy that te project could take on, potentially making it a hybrid system: utilizing waste use or bioenergy may be most useful for this project. A project in the West of the United States may also have fared better, as that was a leading feature that suggested that the project might not be withdrawn."
+        },
+        {
+          "role": "user",
+          "content": "Prediction: 0.62680966\nExplanation: {\n'region_Southeast (non-ISO)': 0.28373541858903883,\n 'region_West (non-ISO)': 0.14689091375643573,\n 'is_wasteuse': -0.0984565893324971,\n 'is_hybrid': -0.08146048706402133,\n 'is_bioenergy': -0.08110796219612183,\n 'high_revenue_utility': 0.07006395871220295,\n 'region_CAISO': 0.058569533550048555,\n 'region_MISO': -0.058241459778383395,\n 'year_entering_queue': -0.03734646521369174,\n 'is_wind': -0.03258317972663459}\nRaw Data: {\n'year_entering_queue': 2020.0,\n 'proposed_year': 2023.0,\n 'region_CAISO': 1.0,\n 'region_MISO': 0.0,\n 'region_PJM': 0.0,\n 'region_Southeast (non-ISO)': 0.0,\n 'region_West (non-ISO)': 0.0,\n 'project_size_mw': 174.0,\n 'project_latitude': 39.5550246,\n 'population_density': 250.2,\n 'votes_dem': 69.0,\n 'votes_rep': 154.0,\n 'votes_total': 228.0,\n 'voting_density': 4.7,\n 'pct_dem_lead': -37.3,\n 'solar_potential': 5.0,\n 'wind_potential': 2.9889495,\n 'is_deregulated': 1.0,\n 'has_100_clean_energy_goal': 1.0,\n 'top_ten_renewable_generators': 1.0,\n 'is_solar': 1.0,\n 'is_storage': 0.0,\n 'is_wind': 0.0,\n 'is_bioenergy': 0.0,\n 'is_wasteuse': 0.0,\n 'is_cleanenergy': 1.0,\n 'is_fossilfuels': 0.0,\n 'is_hybrid': 0.0,\n 'high_revenue_utility': 0.0\n}"
+        },
+        {
+          "role": "assistant",
+          "content": "The given data pertains to a solar project located in the CAISO region with a significantly higher than average capacity of 174 megawatts. The model predicts that this project is more likely not to be withdrawn than be withdrawn, with about 62.7% likelihood. Factors that contributed to this prediction include the project's location, not being in the non-ISO Southeast and non-ISO West regions. Another contributing factor is that the project is not categorized as a wasteuse, hybrid, or bioenergy project, which were identified as features that could potentially negatively affect its progress. On the other hand, factors that would've increased this project's likelihood of withdrawal include not being affiliated with a high-revenue utility and not being part of the CAISO region. The model suggests that for future projects, developers may want to consider ISO regions more as well as attempting to partner with a high-revenue utility."
+        },
+        {
+          "role": "user",
+          "content": input_data
+        }
+      ],
+      temperature=1,
+      max_tokens=256,
+      top_p=1,
+      frequency_penalty=0,
+      presence_penalty=0
+    )
+    
+    content = response.choices[0].message.content
+    return content
+  except Exception as e:
+    return f"Something went wrong with GPT: {e}"
+  
+if __name__ == "__main__":
+  input_data = "here"
+  response = get_analysis(input_data)
+  print(response)
