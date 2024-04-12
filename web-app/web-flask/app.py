@@ -34,6 +34,8 @@ def model():
     #longitude = data['longitude']
     year = data['year']
     
+    print(', '.join(map(str, data)))
+        
     id = county + ',' + state
     
     fetched = fetch_db(id, state)
@@ -155,6 +157,8 @@ def model():
         if utility == entry:
             from_user[29] = 1
     
+    
+    
     X_train = pd.read_csv('X_train.csv')
     X_train = X_train.drop('Unnamed: 0', axis=1)
     scaled = scale_user_input(from_user)
@@ -168,21 +172,36 @@ def model():
     
     #TODO: connecting with openai api
     
-    print(predict)
-    print(features_weight)
+    #print(predict)
+    #print(features_weight)
     
-    if predict < 0.8:
-        rec = top_5_features_rec
+    #if predict < 0.8:
+    #    rec = top_5_features_rec
     
-    explanation_str = ',\n '.join([f"'{key}': {value}" for key, value in Explanation.items()])
-    output_str = f"Prediction: {predict}\nExplanation: {{\n{explanation_str}\n}}"
+    rec = top_5_features_rec
+    
+    raw_dic = {feature_names[i]: from_user[i] for i in range(len(from_user))}
+    
+    fw_json = '\n'.join([f'"{key}": {value}' for key, value in features_weight.items()])
+    rd_json = '\n'.join([f'"{key}": {value}' for key, value in raw_dic.items()])
+    r_json = '\n'.join([f'"{key}": {value}' for key, value in rec.items()])
+    
+    data = {'Explanation': fw_json, 'Raw Data': rd_json, 'Recommendation': r_json}
+    
+    r_bracket = '{'
+    l_bracket = '}'
+    latter = '\n'.join([f'{key}:{r_bracket}\n{value}{l_bracket}' for key, value in data.items()])
+    formatted_json = f'Prediction : {predict} \n{latter}'
     
     debug = ', '.join(map(str, from_user))
     
-    analysis = get_analysis(output_str)
+    txt = get_analysis(formatted_json)
+    
+    #return jsonify({'txt': txt, 'debug': debug})
+    return jsonify({'txt': txt})
     
     #return jsonify({'recommedation': rec, 'features': features_weight})
-    return jsonify({'analysis': analysis, 'debug': debug})
+    #return jsonify({'analysis': analysis, 'debug': debug})
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
