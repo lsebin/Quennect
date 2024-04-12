@@ -56,7 +56,7 @@ def run_shap(point, X_train):
     explainer = shap.GradientExplainer(model, train_tensor)
     
     # try running the code and use [0] or [:,:,0] depending on what works for you
-    shap_values = explainer.shap_values(ex_tensor)[0] #[:,:,0]
+    shap_values = explainer.shap_values(ex_tensor)[:,:,0] #[0]
     
     # for seeing summary_plot
     #shap.summary_plot(shap_values, ex_tensor, feature_names = X_train.columns)
