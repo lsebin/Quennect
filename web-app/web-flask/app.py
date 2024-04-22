@@ -40,7 +40,7 @@ def model():
     
     fetched = fetch_db(id, state)
     
-    latitude, longitude, votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead, ghi, windSpeed = fetched
+    latitude, longitude, pop_density, votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead, ghi, windSpeed = fetched
     
     from_user = [0 for _ in range(30)]
     
@@ -65,8 +65,8 @@ def model():
     from_user[8] = latitude
     from_user[9] = longitude
     
-    #TODO: fix population density
-    from_user[10] = votes_per_sqkm
+    #TODO: population density fixed, see if this works
+    from_user[10] = pop_density
     
     from_user[11] = votes_dem
     from_user[12] = votes_rep
@@ -74,8 +74,8 @@ def model():
     from_user[14] = votes_per_sqkm  # voting_density
     from_user[15] = pct_dem_lead
     
-    #from_user[16] = solar_potential
-    #from_user[17] = wind_potential
+    from_user[16] = ghi
+    from_user[17] = windSpeed
     
     '''
     ['year_entering_queue', 'proposed_year', 'region_CAISO', 
@@ -157,26 +157,15 @@ def model():
         if utility == entry:
             from_user[29] = 1
     
-    
-    
     X_train = pd.read_csv('X_train.csv')
     X_train = X_train.drop('Unnamed: 0', axis=1)
     scaled = scale_user_input(from_user)
     X_test = pd.Series((x for x in scaled[0]))
     
     top_5_features_rec = run_shap(X_test, X_train)
-    # print(top_5_features_rec)
     
     predict, features_weight, feature_names = run_lime(X_test, X_train)
     rec = None
-    
-    #TODO: connecting with openai api
-    
-    #print(predict)
-    #print(features_weight)
-    
-    #if predict < 0.8:
-    #    rec = top_5_features_rec
     
     rec = top_5_features_rec
     
@@ -196,11 +185,8 @@ def model():
     debug = ', '.join(map(str, from_user))
     
     txt = get_analysis(formatted_json)
-    print(txt)
-    #return jsonify({'txt': txt, 'debug': debug})
+    #print(txt)
     return jsonify({'txt': txt})
-    
-    #return jsonify({'recommedation': rec, 'features': features_weight})
     #return jsonify({'analysis': analysis, 'debug': debug})
 
 if __name__ == "__main__":

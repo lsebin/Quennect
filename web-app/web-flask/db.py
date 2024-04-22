@@ -24,14 +24,27 @@ def fetch_db(id, state):
               cursor.execute(selectquery + " FROM states WHERE STATE_ABBR = %s", (state,))
               result = cursor.fetchone()
             return result
+          
+          
                     
+          '''
           coord_result = execute_query("SELECT latitude, longitude FROM usaCounties WHERE ID = %s", 
+                                       id, "SELECT latitude, longitude", state)
+          '''
+          coord_result = execute_query("SELECT latitude, longitude FROM final WHERE ID = %s", 
                                        id, "SELECT latitude, longitude", state)
           #latitude = coord_result[0]
           #longitude = coord_result[1]
           latitude, longitude = coord_result if coord_result else (None, None)
           
+          pop_result = execute_query("SELECT POP_SQMI FROM final WHERE ID = %s", id, "SELECT POP_SQMI", state)
+          pop_density = pop_result[0] if pop_density else None
+          
+          '''
           voting_result = execute_query("SELECT votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead FROM precincts WHERE ID = %s", 
+                                       id, "SELECT votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead", state)
+          '''
+          voting_result = execute_query("SELECT votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead FROM final WHERE ID = %s", 
                                        id, "SELECT votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead", state)
           '''
           votes_dem = voting_result[0]
@@ -42,12 +55,20 @@ def fetch_db(id, state):
           '''
           votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead = voting_result if voting_result else (None, None, None, None, None)
           
+          '''
           ghi_result = execute_query("SELECT GHI FROM GHI WHERE ID = %s", 
+                                      id, "SELECT GHI", state)
+          '''
+          ghi_result = execute_query("SELECT GHI FROM final WHERE ID = %s", 
                                       id, "SELECT GHI", state)
           #ghi = ghi_result[0]
           ghi = ghi_result[0] if ghi_result else None
           
+          '''
           windSpeed_result = execute_query("SELECT windSpeed FROM windSpeed WHERE ID = %s", 
+                                            id, "SELECT GHI", state)
+          '''
+          windSpeed_result = execute_query("SELECT windSpeed FROM final WHERE ID = %s", 
                                             id, "SELECT GHI", state)
           #windSpeed = windSpeed_result[0]
           windSpeed = windSpeed_result[0] if windSpeed_result else None
@@ -55,7 +76,7 @@ def fetch_db(id, state):
           cursor.close()
           connection.close()
                     
-          return [latitude, longitude, votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead, ghi, windSpeed]
+          return [latitude, longitude, pop_density, votes_dem, votes_rep, votes_total, votes_per_sqkm, pct_dem_lead, ghi, windSpeed]
   except Exception as e:
           print(f"Error fetching data from database: {e}")
           return None
